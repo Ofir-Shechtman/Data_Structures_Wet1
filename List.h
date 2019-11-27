@@ -16,6 +16,7 @@ class List{
     int list_size{};
 public:
     List();
+    List(const List<T>&);
     ~List();
     class Iterator;
     void erase(Iterator);
@@ -41,9 +42,7 @@ public:
     const T& operator*() const;
     Iterator& operator++();
     Iterator& operator--();
-    bool operator!=(Iterator it) const;
-
-
+    bool operator!=(const Iterator& it) const;
 };
 
 
@@ -148,6 +147,14 @@ const T& List<T>::back() const{
     return tail->data;
 }
 
+template<class T>
+List<T>::List(const List& list) {
+    for (auto const &i : list){
+        push_back(i);
+    }
+
+}
+
 
 template<class T>
 List<T>::Iterator::Iterator(Node<T> *node) : node(node) {}
@@ -171,7 +178,7 @@ typename List<T>::Iterator &List<T>::Iterator::operator--() {
 
 
 template<class T>
-bool List<T>::Iterator::operator!=(List<T>::Iterator it) const {
+bool List<T>::Iterator::operator!=(const List<T>::Iterator& it) const {
     return node!=it.node;
 }
 
