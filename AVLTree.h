@@ -81,10 +81,18 @@ AVLTree::Iterator::Iterator(BSTNode *node, Stack<BSTNode*> stack):
 node(node), stack(std::move(stack)), last_left(false){}
 
 AVLTree::Iterator &AVLTree::Iterator::operator++() {
-    if(!last_left)
-        Left();
-    else
+    if(!last_left) {
+        if (node->left)
+            Left();
+        else
+            Father();
+    }
+    else {
+        if (node->right)
         Right();
+        else
+            Father();
+    }
     return *this;
 }
 
