@@ -16,6 +16,7 @@
 using namespace std;
 typedef int T;
 
+
 struct BSTNode{
     int key;
     T data;
@@ -45,7 +46,7 @@ public:
 class AVLTree::Iterator{
     BSTNode* node;
     Stack<BSTNode*> stack;
-    bool last_left;
+    bool left, right;
     void Left();
     void Right();
     void Father();
@@ -65,11 +66,13 @@ void AVLTree::Iterator::Left() {
 void AVLTree::Iterator::Right() {
     stack.push(node);
     node=node->right;
+    left=false;
 }
 
 void AVLTree::Iterator::Father() {
     auto father = stack.top();
-    last_left= father->left==node;
+    //left= father->left==node;
+    right= father->right==node;
     node= father;
     stack.pop();
 }
@@ -78,21 +81,29 @@ const T &AVLTree::Iterator::operator*() const {
     return node->data;
 }
 AVLTree::Iterator::Iterator(BSTNode *node, Stack<BSTNode*> stack):
-node(node), stack(std::move(stack)), last_left(false){}
+node(node), stack(std::move(stack)), left(false), right(false){}
 
 AVLTree::Iterator &AVLTree::Iterator::operator++() {
-    if(!last_left) {
-        if (node->left)
+    if(!left) {
+        if (node->left){
             Left();
+            if (node->left)
+                ++*this;
+        }
         else
             Father();
     }
-    else {
-        if (node->right)
-        Right();
+    else if(!right){
+        if (node->right){
+            Right();
+            if (node->left)
+                ++*this;
+    }
         else
             Father();
     }
+    else
+        Father();
     return *this;
 }
 
