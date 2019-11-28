@@ -1,9 +1,3 @@
-#include <utility>
-
-#include <utility>
-
-#include <utility>
-
 //
 // Created by Ben Lugasi on 27/11/2019.
 //
@@ -11,6 +5,7 @@
 #ifndef AVLTREE_H
 #define AVLTREE_H
 #include <iostream>
+#include <utility>
 #include "Stack.h"
 
 using namespace std;
@@ -33,7 +28,6 @@ class AVLTree{
     void remove_req(int key, BSTNode* n);
     void print_inorder_req(BSTNode *n);
 public:
-    class Iterator;
     AVLTree(): root(nullptr){}
     ~AVLTree() = default;
     BSTNode *search(int key);
@@ -41,21 +35,25 @@ public:
     void remove(int key);
     void print_inorder();
     T get(int key);
+    class Iterator;
+    Iterator begin() const;
+    Iterator end() const;
+    class KeyNotExists : public exception{};
 };
 
 class AVLTree::Iterator{
     BSTNode* node;
     Stack<BSTNode*> stack;
-    bool left, right;
     void Left();
     void Right();
     void Father();
 public:
     friend class List<T>;
-    explicit Iterator(BSTNode* node= nullptr, Stack<BSTNode*> stack=Stack<BSTNode*>());
+    explicit Iterator(BSTNode* root);
     const T& operator*() const;
     Iterator& operator++();
     bool operator!=(const Iterator& it) const;
+    class InvalidIterator : public exception{};
 };
 
 void AVLTree::Iterator::Left() {
@@ -66,45 +64,45 @@ void AVLTree::Iterator::Left() {
 void AVLTree::Iterator::Right() {
     stack.push(node);
     node=node->right;
-    left=false;
 }
 
 void AVLTree::Iterator::Father() {
-    auto father = stack.top();
-    //left= father->left==node;
-    right= father->right==node;
-    node= father;
+    node= stack.top();
     stack.pop();
 }
 
 const T &AVLTree::Iterator::operator*() const {
+    if(node== nullptr)
+        throw InvalidIterator();
     return node->data;
 }
-AVLTree::Iterator::Iterator(BSTNode *node, Stack<BSTNode*> stack):
-node(node), stack(std::move(stack)), left(false), right(false){}
+AVLTree::Iterator::Iterator(BSTNode* root):node(root), stack(Stack<BSTNode*>()){
+    if(!node)
+        return;
+    while(node->left)
+        Left();
+}
 
 AVLTree::Iterator &AVLTree::Iterator::operator++() {
-    if(!left) {
-        if (node->left){
+    if(node== nullptr)
+        throw InvalidIterator();
+    if(node->right){
+        Right();
+        while(node->left)
             Left();
-            if (node->left)
-                ++*this;
+        return *this;
+    }
+    while(true) {
+        if (stack.empty()) {
+            node = nullptr;
+            return *this;
         }
-        else
+        if(stack.top()->left==node){
             Father();
-    }
-    else if(!right){
-        if (node->right){
-            Right();
-            if (node->left)
-                ++*this;
-    }
-        else
-            Father();
-    }
-    else
+            return *this;
+        }
         Father();
-    return *this;
+    }
 }
 
 bool AVLTree::Iterator::operator!=(const AVLTree::Iterator& it) const {
@@ -176,10 +174,18 @@ void AVLTree::print_inorder_req(BSTNode *n) {
 
 T AVLTree::get(int key) {
     BSTNode* n = search(key);
-    if(n != nullptr){
-        return n->data;
+    if(n == nullptr){
+        throw KeyNotExists();
     }
-    return -1;
+    return n->data;
+}
+
+AVLTree::Iterator AVLTree::begin() const {
+    return AVLTree::Iterator(root);
+}
+
+AVLTree::Iterator AVLTree::end() const {
+    return AVLTree::Iterator(nullptr);
 }
 
 #endif //AVLTREE_H

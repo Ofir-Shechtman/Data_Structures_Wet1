@@ -12,6 +12,7 @@ public:
     const T& top() const;
     bool empty() const;
     int size() const;
+    class EmptyStack : public List<T>::EmptyList{};
 };
 
 
@@ -22,11 +23,15 @@ const T& Stack<T>::push(const T& value) {
 
 template<class T>
 void Stack<T>::pop() {
+    if(empty())
+        throw EmptyStack();
     list.pop_back();
 }
 
 template<class T>
 const T &Stack<T>::top() const{
+    if(empty())
+        throw EmptyStack();
     return list.back();
 }
 

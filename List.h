@@ -32,6 +32,7 @@ public:
     Iterator begin() const;
     Iterator end() const;
     bool empty() const;
+    class EmptyList : public exception{};
 };
 
 template<class T>
@@ -44,6 +45,7 @@ public:
     Iterator& operator++();
     Iterator& operator--();
     bool operator!=(const Iterator& it) const;
+    class InvalidIterator : public exception{};
 };
 
 
@@ -52,6 +54,8 @@ Node<T>::Node(T data, Node *next, Node *previous):data(data), next(next),previou
 
 template<class T>
 void List<T>::erase(List::Iterator it) {
+    if(!it.mode)
+        throw Iterator::InvalidIterator();
     Node<T>* n=it.node;
     if(n->next)
         n->next->previous=n->previous;
@@ -98,7 +102,7 @@ typename List<T>::Iterator List<T>::push_back(const T &value) {
 
 template<class T>
 typename List<T>::Iterator List<T>::push_front(const T &value) {
-    Node<T>* node= new Node<T>(value, head, nullptr);
+    auto* node= new Node<T>(value, head, nullptr);
     if(!empty())
         head->previous=node;
     else
@@ -110,11 +114,15 @@ typename List<T>::Iterator List<T>::push_front(const T &value) {
 
 template<class T>
 void List<T>::pop_back() {
+    if(empty())
+        throw EmptyList();
     erase(Iterator(tail));
 }
 
 template<class T>
 void List<T>::pop_front() {
+    if(empty())
+        throw EmptyList();
     erase(Iterator(head));
 }
 
@@ -140,11 +148,15 @@ typename List<T>::Iterator List<T>::end() const{
 
 template<class T>
 const T& List<T>::front() const{
+    if(empty())
+        throw EmptyList();
     return head->data;
 }
 
 template<class T>
 const T& List<T>::back() const{
+    if(empty())
+        throw EmptyList();
     return tail->data;
 }
 
