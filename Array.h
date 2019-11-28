@@ -14,6 +14,7 @@ public:
     ~Array();
     T& operator[](int index);
     const T& operator[](int index) const;
+    const T& operator*() const;
 };
 
 template<class T>

@@ -10,7 +10,7 @@ struct Triple {
 };
 
 template<class T1, class T2, class T3>
-Triple<T1, T2, T3>::Triple(T1 first, T2 second, T3 third) :
+Triple<T1, T2, T3>::Triple(T1 first, T2 second, T3 third):
         first(first), second(second), third(third) {}
 
 #endif //TRIPLE_H

@@ -11,6 +11,12 @@
 using namespace std;
 typedef int T;
 
+class Compare{
+public:
+    Compare()= default;
+    virtual ~Compare()= default;
+    virtual void operator()(T d1, T d2)=0;
+};
 
 struct BSTNode{
     int key;
@@ -20,15 +26,15 @@ struct BSTNode{
     BSTNode(int key, T data, BSTNode* right= nullptr, BSTNode* left= nullptr);
 };
 
-
 class AVLTree{
     BSTNode * root;
     BSTNode *search_req(int key, BSTNode *n);
+    const Compare* cmp;
     void append_req(int key,T data, BSTNode* n);
     void remove_req(int key, BSTNode* n);
     void print_inorder_req(BSTNode *n);
 public:
-    AVLTree(): root(nullptr){}
+    explicit AVLTree(const Compare& cmp);
     ~AVLTree() = default;
     BSTNode *search(int key);
     void append(int key,T data);
@@ -48,7 +54,7 @@ class AVLTree::Iterator{
     void Right();
     void Father();
 public:
-    friend class List<T>;
+    //friend class AVLTree<T>;
     explicit Iterator(BSTNode* root);
     const T& operator*() const;
     Iterator& operator++();
@@ -187,5 +193,7 @@ AVLTree::Iterator AVLTree::begin() const {
 AVLTree::Iterator AVLTree::end() const {
     return AVLTree::Iterator(nullptr);
 }
+
+AVLTree::AVLTree(const Compare &cmp) : root(nullptr), cmp(&cmp){}
 
 #endif //AVLTREE_H
