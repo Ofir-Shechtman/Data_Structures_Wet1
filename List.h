@@ -14,11 +14,13 @@ struct Node{
 template<class T>
 class List{
     Node<T> *head, *tail;
-    int list_size{};
+    int list_size;
+    void clear();
 public:
     List();
     List(const List<T>&);
     ~List();
+    List<T>& operator=(const List&);
     class Iterator;
     void erase(Iterator);
     void pop_back();
@@ -32,7 +34,7 @@ public:
     Iterator begin() const;
     Iterator end() const;
     bool empty() const;
-    class EmptyList : public exception{};
+    class EmptyList : public std::exception{};
 };
 
 template<class T>
@@ -45,7 +47,7 @@ public:
     Iterator& operator++();
     Iterator& operator--();
     bool operator!=(const Iterator& it) const;
-    class InvalidIterator : public exception{};
+    class InvalidIterator : public std::exception{};
 };
 
 
@@ -54,8 +56,8 @@ Node<T>::Node(T data, Node *next, Node *previous):data(data), next(next),previou
 
 template<class T>
 void List<T>::erase(List::Iterator it) {
-    if(!it.mode)
-        throw Iterator::InvalidIterator();
+    if(!it.node)
+        throw typename List<T>::Iterator::InvalidIterator();
     Node<T>* n=it.node;
     if(n->next)
         n->next->previous=n->previous;
@@ -75,12 +77,7 @@ List<T>::List():head(nullptr), tail(nullptr) {}
 
 template<class T>
 List<T>::~List() {
-    Node<T>* n= head, *temp;
-    while(n){
-        temp=n;
-        n=n->next;
-        delete temp;
-    }
+    clear();
 }
 
 template<class T>
@@ -166,6 +163,25 @@ List<T>::List(const List& list) {
         push_back(i);
     }
 
+}
+
+template<class T>
+List<T> &List<T>::operator=(const List& list) {
+    if(this==&list)
+        return *this;
+    clear();
+    for(auto &i : list)
+        push_back(i);
+}
+
+template<class T>
+void List<T>::clear() {
+    Node<T>* n= head, *temp;
+    while(n){
+        temp=n;
+        n=n->next;
+        delete temp;
+    }
 }
 
 

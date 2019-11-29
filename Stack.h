@@ -7,7 +7,7 @@ template<class T>
 class Stack {
     List<T> list;
 public:
-    const T& push(const T&);
+    void push(const T&);
     void pop();
     const T& top() const;
     bool empty() const;
@@ -18,7 +18,7 @@ public:
 
 template<class T>
 const T& Stack<T>::push(const T& value) {
-    return list.push_back(value);
+    list.push_back(value);
 }
 
 template<class T>
@@ -29,7 +29,7 @@ void Stack<T>::pop() {
 }
 
 template<class T>
-const T &Stack<T>::top() const{
+const T& Stack<T>::top() const{
     if(empty())
         throw EmptyStack();
     return list.back();
