@@ -22,7 +22,7 @@ public:
 };
 
 
-//template <class K, class T=int>
+//template <class K, class T>
 struct BSTNode{
     K key;
     T data;

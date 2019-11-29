@@ -15,7 +15,6 @@ template<class T>
 class List{
     Node<T> *head, *tail;
     int list_size;
-    void clear();
 public:
     List();
     List(const List<T>&);
@@ -31,6 +30,7 @@ public:
     const T& front() const;
     const T& back() const;
     const int& size() const;
+    void clear();
     Iterator begin() const;
     Iterator end() const;
     bool empty() const;
@@ -72,7 +72,7 @@ void List<T>::erase(List::Iterator it) {
 }
 
 template<class T>
-List<T>::List():head(nullptr), tail(nullptr) {}
+List<T>::List():head(nullptr), tail(nullptr), list_size(0){}
 
 
 template<class T>
@@ -82,9 +82,13 @@ List<T>::~List() {
 
 template<class T>
 typename List<T>::Iterator List<T>::insert(const List<T>::Iterator &pos, const T &value) {
+    if(!pos.node)
+        throw typename List<T>::Iterator::InvalidIterator();
     Node<T>* node= new Node<T>(value, pos.node->next, pos.node);
     pos.node->next=node;
-    if(node->next==nullptr)
+    if(node->next)
+        node->next->previous=node;
+    else
         tail=node;
     ++list_size;
     return Iterator(node);
@@ -158,7 +162,8 @@ const T& List<T>::back() const{
 }
 
 template<class T>
-List<T>::List(const List& list) {
+List<T>::List(const List& list) : head(nullptr), tail(nullptr), list_size(list.list_size){
+    clear();
     for (auto const &i : list){
         push_back(i);
     }
@@ -182,6 +187,8 @@ void List<T>::clear() {
         n=n->next;
         delete temp;
     }
+    head= nullptr;
+    tail= nullptr;
 }
 
 
@@ -195,12 +202,16 @@ const T& List<T>::Iterator::operator*() const {
 
 template<class T>
 typename List<T>::Iterator &List<T>::Iterator::operator++() {
+    if(!node)
+        throw typename List<T>::Iterator::InvalidIterator();
     node=node->next;
     return *this;
 }
 
 template<class T>
 typename List<T>::Iterator &List<T>::Iterator::operator--() {
+    if(!node)
+        throw typename List<T>::Iterator::InvalidIterator();
     node=node->previous;
     return *this;
 }

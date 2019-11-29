@@ -11,6 +11,7 @@ class default_cmp : public Compare{
     bool operator()(K key1, K key2){return key1<key2;};
 };
 
+//template <class K, class T=int>
 class Map {
     AVLTree tree;
 public:

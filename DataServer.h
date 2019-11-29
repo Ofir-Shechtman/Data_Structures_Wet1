@@ -28,6 +28,7 @@ struct Server{
  * the missing linux_count is just num_of_servers-windows_count
  */
 class DataServer {
+protected:
     Array<Server> servers;
     List<ServerID> windows_queue;
     List<ServerID> linux_queue;

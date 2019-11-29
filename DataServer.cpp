@@ -28,21 +28,21 @@ DataServer::DataServer(DataServerID ds_id, unsigned int num_of_servers):
  * the requested os queue. able to change os of the server.
  */
 void DataServer::AllocateServer(ServerID id, OS os) {
-    Server& server = servers[id];
-    auto& queue = os==Linux ? linux_queue : windows_queue;
-    if(server.state==Occupied) {
-        if(queue.empty()) {
-            queue = os == Linux ? windows_queue : linux_queue;
-            if (queue.empty())
+    Server* server = &servers[id];
+    auto* queue = os==Linux ? &linux_queue : &windows_queue;
+    if(server->state==Occupied) {
+        if(queue->empty()) {
+            queue = os == Linux ? &windows_queue : &linux_queue;
+            if (queue->empty())
                 throw NoFreeServers();
         }
-        server=servers[queue.front()];
+        server=&servers[queue->front()];
     }
-    queue.erase(server.iterator);
-    server.state=Occupied;
-    server.iterator=List<ServerID>::Iterator();
-    if(server.os!=os) {
-        server.os = os;
+    queue->erase(server->iterator);
+    server->state=Occupied;
+    server->iterator=List<ServerID>::Iterator();
+    if(server->os!=os) {
+        server->os = os;
         os == Linux ? --windows_count : ++windows_count;
     }
 }
