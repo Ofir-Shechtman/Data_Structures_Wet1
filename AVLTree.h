@@ -9,8 +9,9 @@
 #include "Stack.h"
 
 using namespace std;
-typedef int T;
 typedef int K;
+typedef int T;
+
 
 //template <class K>
 class Compare{

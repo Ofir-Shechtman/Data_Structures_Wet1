@@ -2,8 +2,9 @@
 #define MAP_H
 
 #include "AVLTree.h"
-typedef int T;
 typedef int K;
+typedef int T;
+
 
 //template <class K>
 class default_cmp : public Compare{
