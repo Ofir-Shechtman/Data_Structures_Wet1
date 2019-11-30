@@ -33,7 +33,6 @@ protected:
     List<ServerID> windows_queue;
     List<ServerID> linux_queue;
     DataCenterID dc_id;
-    unsigned int num_of_servers;
     unsigned int windows_count;
 public:
     DataServer(DataCenterID dc_id, unsigned int num_of_servers);

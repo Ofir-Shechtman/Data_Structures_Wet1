@@ -12,7 +12,7 @@ Server::Server(ServerID id, List<ServerID>::Iterator it):
  * and iterator by the iterator returns from the stack-push
  */
 DataServer::DataServer(DataCenterID dc_id, unsigned int num_of_servers):
-        dc_id(dc_id), num_of_servers(num_of_servers),
+        dc_id(dc_id),
         servers(Array<Server>(num_of_servers)), windows_count(0){
     for(ServerID id=0; id<num_of_servers; ++id){
         auto server_it=linux_queue.push_back(id);
