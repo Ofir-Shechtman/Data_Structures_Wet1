@@ -1,5 +1,5 @@
-#ifndef DATASERVER_H
-#define DATASERVER_H
+#ifndef DATACENTER_H
+#define DATACENTER_H
 
 #include "Array.h"
 #include "List.h"
@@ -8,7 +8,7 @@ enum OS {Linux, Windows};
 enum State {Available, Occupied};
 
 typedef unsigned int ServerID;
-typedef unsigned int DataServerID;
+typedef unsigned int DataCenterID;
 
 /*!
  * Struct that contains the Server info,
@@ -32,11 +32,11 @@ protected:
     Array<Server> servers;
     List<ServerID> windows_queue;
     List<ServerID> linux_queue;
-    DataServerID ds_id;
+    DataCenterID dc_id;
     unsigned int num_of_servers;
     unsigned int windows_count;
 public:
-    DataServer(DataServerID ds_id, unsigned int num_of_servers);
+    DataServer(DataCenterID dc_id, unsigned int num_of_servers);
     ~DataServer()= default;
     void AllocateServer(ServerID id, OS os);
     void ReceivedServer(ServerID);
@@ -44,4 +44,4 @@ public:
 };
 
 
-#endif //DATASERVER_H
+#endif //DATACENTER_H

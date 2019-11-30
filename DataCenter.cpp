@@ -1,18 +1,18 @@
-#include "DataServer.h"
+#include "DataCenter.h"
 
 Server::Server(ServerID id, List<ServerID>::Iterator it):
     id(id), os(Linux), state(Available), iterator(it) {}
 
 /*!
  * DataServer Constructor
- * @param ds_id
+ * @param dc_id
  * @param num_of_servers
  * by default all servers are linux type
  * the server array values set with ids of 0 to num_of_servers-1,
  * and iterator by the iterator returns from the stack-push
  */
-DataServer::DataServer(DataServerID ds_id, unsigned int num_of_servers):
-        ds_id(ds_id), num_of_servers(num_of_servers),
+DataServer::DataServer(DataCenterID dc_id, unsigned int num_of_servers):
+        dc_id(dc_id), num_of_servers(num_of_servers),
         servers(Array<Server>(num_of_servers)), windows_count(0){
     for(ServerID id=0; id<num_of_servers; ++id){
         auto server_it=linux_queue.push_back(id);
