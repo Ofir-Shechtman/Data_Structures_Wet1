@@ -84,7 +84,7 @@ template<class T>
 typename List<T>::Iterator List<T>::insert(const List<T>::Iterator &pos, const T &value) {
     if(!pos.node)
         throw typename List<T>::Iterator::InvalidIterator();
-    Node<T>* node= new Node<T>(value, pos.node->next, pos.node);
+    auto *node= new Node<T>(value, pos.node->next, pos.node);
     pos.node->next=node;
     if(node->next)
         node->next->previous=node;
@@ -171,25 +171,15 @@ List<T> &List<T>::operator=(const List& list) {
     if(this==&list)
         return *this;
     clear();
-    auto i=list.begin();
-    auto n= push_back(*i);
-    head=n.node;
-    for (++i;i!=list.end(); ++i){
-        n=push_back(*i);
-    }
-    tail=n.node;
+    for(auto &i : list)
+        push_back(i);
 }
 
 template<class T>
 void List<T>::clear() {
-    Node<T>* n= head, *temp;
-    while(n){
-        temp=n;
-        n=n->next;
-        delete temp;
+    while(head){
+        pop_front();
     }
-    head= nullptr;
-    tail= nullptr;
 }
 
 

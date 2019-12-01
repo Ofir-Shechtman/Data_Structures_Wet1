@@ -17,7 +17,7 @@ public:
 
 
 template<class T>
-const T& Stack<T>::push(const T& value) {
+void Stack<T>::push(const T& value) {
     list.push_back(value);
 }
 
