@@ -163,13 +163,7 @@ const T& List<T>::back() const{
 
 template<class T>
 List<T>::List(const List& list) : head(nullptr), tail(nullptr), list_size(list.list_size){
-    auto i=list.begin();
-    auto n= push_back(*i);
-    head=n.node;
-    for (++i;i!=list.end(); ++i){
-        n=push_back(*i);
-    }
-    tail=n.node;
+    *this=list;
 }
 
 template<class T>
@@ -177,10 +171,13 @@ List<T> &List<T>::operator=(const List& list) {
     if(this==&list)
         return *this;
     clear();
-    for(auto &i : list)
-        push_back(i);
-    head=list.head;
-    tail=list.tail;
+    auto i=list.begin();
+    auto n= push_back(*i);
+    head=n.node;
+    for (++i;i!=list.end(); ++i){
+        n=push_back(*i);
+    }
+    tail=n.node;
 }
 
 template<class T>
