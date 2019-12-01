@@ -40,6 +40,7 @@ public:
     void AllocateServer(ServerID id, OS os);
     void ReceivedServer(ServerID);
     class NoFreeServers : public std::exception{};
+    class ServersNotOccupied : public std::exception{};
 };
 
 

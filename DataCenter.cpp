@@ -54,6 +54,8 @@ void DataServer::AllocateServer(ServerID id, OS os) {
  */
 void DataServer::ReceivedServer(ServerID id) {
     Server& server = servers[id];
+    if(server.state!=Occupied)
+        throw ServersNotOccupied();
     auto& queue = server.os==Linux ? linux_queue : windows_queue;
     server.iterator=queue.push_back(id);
     server.state=Available;
