@@ -1,17 +1,17 @@
 #include "DataCenter.h"
 
-DataServer::Server::Server(ServerID id, List<ServerID>::Iterator it):
+DataCenter::Server::Server(ServerID id, List<ServerID>::Iterator it):
     id(id), os(Linux), state(Available), iterator(it) {}
 
 /*!
- * DataServer Constructor
+ * DataCenter Constructor
  * @param dc_id
  * @param num_of_servers
  * by default all servers are linux type
  * the server array values set with ids of 0 to num_of_servers-1,
  * and iterator by the iterator returns from the stack-push
  */
-DataServer::DataServer(DataCenterID dc_id, unsigned int num_of_servers):
+DataCenter::DataCenter(DataCenterID dc_id, unsigned int num_of_servers):
         dc_id(dc_id),
         servers(Array<Server>(num_of_servers)), windows_count(0){
     for(ServerID id=0; id<num_of_servers; ++id){
@@ -27,7 +27,7 @@ DataServer::DataServer(DataCenterID dc_id, unsigned int num_of_servers):
  * Allocate the requested ServerID if Available, if not allocate another by
  * the requested os queue. able to change os of the server.
  */
-ServerID DataServer::AllocateServer(ServerID id, OS os) {
+ServerID DataCenter::AllocateServer(ServerID id, OS os) {
     Server* server = &servers[id];
     auto* queue = os==Linux ? &linux_queue : &windows_queue;
     if(server->state==Occupied) {
@@ -53,7 +53,7 @@ ServerID DataServer::AllocateServer(ServerID id, OS os) {
  * data server. returns the server the the end of the queue.
  * @param id
  */
-void DataServer::ReceivedServer(ServerID id) {
+void DataCenter::ReceivedServer(ServerID id) {
     Server& server = servers[id];
     if(server.state!=Occupied)
         throw ServersNotOccupied();

@@ -11,12 +11,12 @@ typedef unsigned int ServerID;
 typedef unsigned int DataCenterID;
 
 /*!
- * DataServer class contains Array of all servers and 2 List that act like
+ * DataCenter class contains Array of all servers and 2 List that act like
  * queues of ServerID to manage the server queue for linux and windows.
  * the missing linux_count is just num_of_servers-windows_count
  */
-class DataServer {
-protected:
+class DataCenter {
+protected://just for testing
     struct Server;
     Array<Server> servers;
     List<ServerID> windows_queue;
@@ -24,8 +24,8 @@ protected:
     DataCenterID dc_id;
     unsigned int windows_count;
 public:
-    DataServer(DataCenterID dc_id, unsigned int num_of_servers);
-    ~DataServer()= default;
+    DataCenter(DataCenterID dc_id, unsigned int num_of_servers);
+    ~DataCenter()= default;
     ServerID AllocateServer(ServerID id, OS os);
     void ReceivedServer(ServerID);
     class NoFreeServers : public std::exception{};
@@ -36,7 +36,7 @@ public:
  * Struct that contains the Server info,
  * the iterator filed is iterator of the server in the relevant stack.
  */
-struct DataServer::Server{
+struct DataCenter::Server{
     ServerID id;
     OS os;
     State state;
