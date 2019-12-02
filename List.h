@@ -2,18 +2,11 @@
 #define LIST_H
 
 
-template<class T>
-struct Node{
-    T data;
-    Node<T>* next;
-    Node<T>* previous;
-    Node(T data, Node* next, Node* previous);
-    ~Node()= default;
-};
 
 template<class T>
 class List{
-    Node<T> *head, *tail;
+    struct Node;
+    Node *head, *tail;
     int list_size;
 public:
     List();
@@ -38,11 +31,20 @@ public:
 };
 
 template<class T>
+struct List<T>::Node{
+    T data;
+    Node* next;
+    Node* previous;
+    Node(T data, Node* next, Node* previous);
+    ~Node()= default;
+};
+
+template<class T>
 class List<T>::Iterator{
-    Node<T>* node;
+    Node* node;
 public:
     friend class List<T>;
-    explicit Iterator(Node<T>* node= nullptr);
+    explicit Iterator(Node* node= nullptr);
     const T& operator*() const;
     Iterator& operator++();
     Iterator& operator--();
@@ -52,13 +54,13 @@ public:
 
 
 template<class T>
-Node<T>::Node(T data, Node *next, Node *previous):data(data), next(next),previous(previous){}
+List<T>::Node::Node(T data, Node *next, Node *previous):data(data), next(next),previous(previous){}
 
 template<class T>
 void List<T>::erase(List::Iterator it) {
     if(!it.node)
         throw typename List<T>::Iterator::InvalidIterator();
-    Node<T>* n=it.node;
+    Node* n=it.node;
     if(n->next)
         n->next->previous=n->previous;
     else
@@ -84,7 +86,7 @@ template<class T>
 typename List<T>::Iterator List<T>::insert(const List<T>::Iterator &pos, const T &value) {
     if(!pos.node)
         throw typename List<T>::Iterator::InvalidIterator();
-    auto *node= new Node<T>(value, pos.node->next, pos.node);
+    auto *node= new Node(value, pos.node->next, pos.node);
     pos.node->next=node;
     if(node->next)
         node->next->previous=node;
@@ -103,7 +105,7 @@ typename List<T>::Iterator List<T>::push_back(const T &value) {
 
 template<class T>
 typename List<T>::Iterator List<T>::push_front(const T &value) {
-    auto* node= new Node<T>(value, head, nullptr);
+    auto* node= new Node(value, head, nullptr);
     if(!empty())
         head->previous=node;
     else
@@ -184,7 +186,7 @@ void List<T>::clear() {
 
 
 template<class T>
-List<T>::Iterator::Iterator(Node<T> *node) : node(node) {}
+List<T>::Iterator::Iterator(Node *node) : node(node) {}
 
 template<class T>
 const T& List<T>::Iterator::operator*() const {

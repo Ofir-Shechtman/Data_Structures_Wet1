@@ -22,42 +22,44 @@ public:
 };
 
 
-//template <class K, class T>
-struct BSTNode{
-    K key;
-    T data;
-    BSTNode* right;
-    BSTNode* left;
-    BSTNode(K key, T data, BSTNode* right= nullptr, BSTNode* left= nullptr);
-};
 
 class AVLTree{
-    BSTNode * root;
+    struct Node;
+    Node * root;
     const Compare* cmp;
 
 public:
     explicit AVLTree(const Compare& cmp);
     ~AVLTree() = default;
-    BSTNode *search_req(K key, BSTNode *n);
-    void append_req(K key,T data, BSTNode* n);
-    void remove_req(K key, BSTNode* n);
-    void print_inorder_req(BSTNode *n);
+    Node *search_req(K key, Node *n);
+    void append_req(K key,T data, Node* n);
+    void remove_req(K key, Node* n);
+    void print_inorder_req(Node *n);
     void print_inorder();
-    BSTNode* search(K key);
+    Node* search(K key);
     class Iterator;
     Iterator begin() const;
     Iterator end() const;
     class KeyNotExists : public exception{};
 };
 
+//template <class K, class T>
+struct AVLTree::Node{
+    K key;
+    T data;
+    Node* right;
+    Node* left;
+    Node(K key, T data, Node* right= nullptr, Node* left= nullptr);
+};
+
 class AVLTree::Iterator{
-    BSTNode* node;
-    Stack<BSTNode*> stack;
+    Node* node;
+    Stack<Node*> stack;
     void Left();
     void Right();
     void Father();
 public:
-    explicit Iterator(BSTNode* root);
+    explicit Iterator(Node* root);
     const T& operator*() const;
     Iterator& operator++();
     bool operator!=(const Iterator& it) const;
@@ -85,7 +87,7 @@ const T &AVLTree::Iterator::operator*() const {
         throw InvalidIterator();
     return node->data;
 }
-AVLTree::Iterator::Iterator(BSTNode* root):node(root), stack(Stack<BSTNode*>()){
+AVLTree::Iterator::Iterator(Node* root):node(root), stack(Stack<Node*>()){
     if(!node)
         return;
     while(node->left)
@@ -119,10 +121,10 @@ bool AVLTree::Iterator::operator!=(const AVLTree::Iterator& it) const {
 }
 
 
-BSTNode::BSTNode(K key, T data, BSTNode *right, BSTNode *left):
+Node::Node(K key, T data, Node *right, Node *left):
     key(key), data(data), right(right), left(left){}
 
-BSTNode *AVLTree::search_req(K key, BSTNode *n) {
+Node *AVLTree::search_req(K key, Node *n) {
     if(n == nullptr){
         return nullptr;
     }
@@ -138,16 +140,16 @@ BSTNode *AVLTree::search_req(K key, BSTNode *n) {
     return nullptr;
 }
 
-BSTNode *AVLTree::search(K key) {
+Node *AVLTree::search(K key) {
     return search_req(key,root);
 }
 
 
 
-void AVLTree::append_req(K key, T data, BSTNode *n) {
+void AVLTree::append_req(K key, T data, Node *n) {
     if(key < n->key){
         if(n->left == nullptr){
-            n->left = new BSTNode(key, data);
+            n->left = new Node(key, data);
         }
         else{
             append_req(key,data,n->left);
@@ -155,7 +157,7 @@ void AVLTree::append_req(K key, T data, BSTNode *n) {
     }
     else if(key > n->key){
         if(n->right == nullptr){
-            n->right = new BSTNode(key, data);
+            n->right = new Node(key, data);
         }
         else {
             append_req(key, data, n->right);
@@ -168,7 +170,7 @@ void AVLTree::print_inorder() {
     print_inorder_req(root);
 }
 
-void AVLTree::print_inorder_req(BSTNode *n) {
+void AVLTree::print_inorder_req(Node *n) {
     if(n == nullptr) return;
     print_inorder_req(n->left);
     cout<<"(key= "<<n->key<<", data= "<<n->data<<")"<<endl;

@@ -47,14 +47,14 @@ public:
 
 void AVLTree::append(K key, T data) {
     if(root == nullptr){
-        root = new BSTNode(key, data);
+        root = new Node(key, data);
         return;
     }
     append_req(key,data,root);
 }
 
 T AVLTree::get(K key) {
-    BSTNode* n = search(key);
+    Node* n = search(key);
     if(n == nullptr){
         throw KeyNotExists();
     }
