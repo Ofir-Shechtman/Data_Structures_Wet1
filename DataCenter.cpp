@@ -1,6 +1,6 @@
 #include "DataCenter.h"
 
-Server::Server(ServerID id, List<ServerID>::Iterator it):
+DataServer::Server::Server(ServerID id, List<ServerID>::Iterator it):
     id(id), os(Linux), state(Available), iterator(it) {}
 
 /*!
@@ -27,7 +27,7 @@ DataServer::DataServer(DataCenterID dc_id, unsigned int num_of_servers):
  * Allocate the requested ServerID if Available, if not allocate another by
  * the requested os queue. able to change os of the server.
  */
-void DataServer::AllocateServer(ServerID id, OS os) {
+ServerID DataServer::AllocateServer(ServerID id, OS os) {
     Server* server = &servers[id];
     auto* queue = os==Linux ? &linux_queue : &windows_queue;
     if(server->state==Occupied) {
@@ -45,6 +45,7 @@ void DataServer::AllocateServer(ServerID id, OS os) {
         server->os = os;
         os == Linux ? --windows_count : ++windows_count;
     }
+    return server->id;
 }
 
 /*!
@@ -60,5 +61,3 @@ void DataServer::ReceivedServer(ServerID id) {
     server.iterator=queue.push_back(id);
     server.state=Available;
 }
-
-
