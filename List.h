@@ -1,8 +1,10 @@
 #ifndef LIST_H
 #define LIST_H
 
-
-
+/*!
+ * Doubly linked list of type T
+ * @tparam T
+ */
 template<class T>
 class List{
     struct Node;
@@ -56,6 +58,11 @@ public:
 template<class T>
 List<T>::Node::Node(T data, Node *next, Node *previous):data(data), next(next),previous(previous){}
 
+/*!
+ * erase from the list the item of the iterator it
+ * @tparam T
+ * @param it
+ */
 template<class T>
 void List<T>::erase(List::Iterator it) {
     if(!it.node)
@@ -73,8 +80,13 @@ void List<T>::erase(List::Iterator it) {
     --list_size;
 }
 
+/*!
+ * initialize emply list
+ * @tparam T
+ */
 template<class T>
 List<T>::List():head(nullptr), tail(nullptr), list_size(0){}
+
 
 
 template<class T>
@@ -82,6 +94,13 @@ List<T>::~List() {
     clear();
 }
 
+/*!
+ * insert value to the list *after* the iterator pos
+ * @tparam T
+ * @param pos
+ * @param value
+ * @return iterator the the new element
+ */
 template<class T>
 typename List<T>::Iterator List<T>::insert(const List<T>::Iterator &pos, const T &value) {
     if(!pos.node)
@@ -96,6 +115,12 @@ typename List<T>::Iterator List<T>::insert(const List<T>::Iterator &pos, const T
     return Iterator(node);
 }
 
+/*!
+ * insert value to the end of the list
+ * @tparam T
+ * @param value
+ * @return iterator the the new element
+ */
 template<class T>
 typename List<T>::Iterator List<T>::push_back(const T &value) {
     if(empty())
@@ -103,6 +128,12 @@ typename List<T>::Iterator List<T>::push_back(const T &value) {
     return insert(Iterator(tail), value);
 }
 
+/*!
+ * insert value to the start of the list
+ * @tparam T
+ * @param value
+ * @return iterator the the new element
+ */
 template<class T>
 typename List<T>::Iterator List<T>::push_front(const T &value) {
     auto* node= new Node(value, head, nullptr);
@@ -115,6 +146,10 @@ typename List<T>::Iterator List<T>::push_front(const T &value) {
     return Iterator(head);
 }
 
+/*!
+ * remove the last element
+ * @tparam T
+ */
 template<class T>
 void List<T>::pop_back() {
     if(empty())
@@ -122,6 +157,10 @@ void List<T>::pop_back() {
     erase(Iterator(tail));
 }
 
+/*!
+ * remove the first element
+ * @tparam T
+ */
 template<class T>
 void List<T>::pop_front() {
     if(empty())
@@ -129,26 +168,45 @@ void List<T>::pop_front() {
     erase(Iterator(head));
 }
 
+/*!
+ * @tparam T
+ * @return return true if the list is empty, else false
+ */
 template<class T>
 bool List<T>::empty() const{
     return tail==nullptr;
 
+/*!
+ * returns the number of elements of the list
+ */
 }
 template<class T>
 const int & List<T>::size() const {
     return list_size;
 }
 
+/*!
+ * @tparam T
+ * @return returns iterator to the begin of the list
+ */
 template<class T>
 typename List<T>::Iterator List<T>::begin() const {
     return Iterator(head);
 }
 
+/*!
+ * @tparam T
+ * @return returns iterator to the end of the list
+ */
 template<class T>
 typename List<T>::Iterator List<T>::end() const{
     return Iterator(nullptr);
 }
 
+/*!
+ * @tparam T
+ * @return returns the first value in the list
+ */
 template<class T>
 const T& List<T>::front() const{
     if(empty())
@@ -156,6 +214,10 @@ const T& List<T>::front() const{
     return head->data;
 }
 
+/*!
+ * @tparam T
+ * @return returns the last value in the list
+ */
 template<class T>
 const T& List<T>::back() const{
     if(empty())
@@ -177,6 +239,10 @@ List<T> &List<T>::operator=(const List& list) {
         push_back(i);
 }
 
+/*!
+ * removes all list's elements
+ * @tparam T
+ */
 template<class T>
 void List<T>::clear() {
     while(head){
@@ -188,11 +254,21 @@ void List<T>::clear() {
 template<class T>
 List<T>::Iterator::Iterator(Node *node) : node(node) {}
 
+/*!
+ * returns the data that the iterator points on
+ * @tparam T
+ * @return
+ */
 template<class T>
 const T& List<T>::Iterator::operator*() const {
     return node->data;
 }
 
+/*!
+ * increase the iterator to the next value
+ * @tparam T
+ * @return
+ */
 template<class T>
 typename List<T>::Iterator &List<T>::Iterator::operator++() {
     if(!node)
@@ -201,6 +277,11 @@ typename List<T>::Iterator &List<T>::Iterator::operator++() {
     return *this;
 }
 
+/*!
+ * decrease the iterator to the previous value
+ * @tparam T
+ * @return
+ */
 template<class T>
 typename List<T>::Iterator &List<T>::Iterator::operator--() {
     if(!node)
@@ -209,7 +290,12 @@ typename List<T>::Iterator &List<T>::Iterator::operator--() {
     return *this;
 }
 
-
+/*!
+ * compare the iterator with another iterator
+ * @tparam T
+ * @param it
+ * @return true if they are equal. else false.
+ */
 template<class T>
 bool List<T>::Iterator::operator!=(const List<T>::Iterator& it) const {
     return node!=it.node;
