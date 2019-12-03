@@ -1,6 +1,6 @@
 #ifndef LIST_H
 #define LIST_H
-
+#include <iostream>
 /*!
  * Doubly linked list of type T
  * @tparam T

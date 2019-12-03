@@ -1,7 +1,6 @@
 #ifndef AVLTREE_H
 #define AVLTREE_H
 #include <iostream>
-#include <utility>
 #include "Stack.h"
 
 using namespace std;
@@ -24,7 +23,6 @@ class AVLTree{
     struct Node;
     Node * root;
     const Compare<T>* cmp;
-
 public:
     class Iterator;
     Iterator begin() const;
@@ -50,6 +48,7 @@ struct AVLTree<K,T>::Node{
     unsigned int h;
     explicit Node(T data, Node* right= nullptr, Node* left= nullptr);
 };
+
 
 template <class K, class T>
 class AVLTree<K,T>::Iterator{

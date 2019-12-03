@@ -3,8 +3,6 @@
 
 #include "AVLTree.h"
 
-
-
 template <class K, class T>
 class Map {
     AVLTree<K,T> tree;
