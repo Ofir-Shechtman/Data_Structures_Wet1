@@ -13,7 +13,7 @@ DataCenter::Server::Server(ServerID id, List<ServerID>::Iterator it):
  */
 DataCenter::DataCenter(DataCenterID dc_id, unsigned int num_of_servers):
         dc_id(dc_id),
-        servers(Array<Server>(num_of_servers)), windows_count(0){
+        servers(Array<Server>(num_of_servers)), windows_counter(0){
     for(ServerID id=0; id<num_of_servers; ++id){
         auto server_it=linux_queue.push_back(id);
         servers[id]=Server(id, server_it);
@@ -43,7 +43,7 @@ ServerID DataCenter::AllocateServer(ServerID id, OS os) {
     server->iterator=List<ServerID>::Iterator();
     if(server->os!=os) {
         server->os = os;
-        os == Linux ? --windows_count : ++windows_count;
+        os == Linux ? --windows_counter : ++windows_counter;
     }
     return server->id;
 }
@@ -53,10 +53,10 @@ ServerID DataCenter::AllocateServer(ServerID id, OS os) {
  * data server. returns the server the the end of the queue.
  * @param id
  */
-void DataCenter::ReceivedServer(ServerID id) {
+void DataCenter::ReturnServer(ServerID id) {
     Server& server = servers[id];
     if(server.state!=Occupied)
-        throw ServersNotOccupied();
+        throw ServerNotOccupied();
     auto& queue = server.os==Linux ? linux_queue : windows_queue;
     server.iterator=queue.push_back(id);
     server.state=Available;

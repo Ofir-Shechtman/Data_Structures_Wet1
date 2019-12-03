@@ -237,6 +237,7 @@ List<T> &List<T>::operator=(const List& list) {
     clear();
     for(auto &i : list)
         push_back(i);
+    return *this;
 }
 
 /*!

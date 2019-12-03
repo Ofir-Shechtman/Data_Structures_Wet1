@@ -22,14 +22,14 @@ protected://just for testing
     List<ServerID> windows_queue;
     List<ServerID> linux_queue;
     DataCenterID dc_id;
-    unsigned int windows_count;
+    unsigned int windows_counter;
 public:
     DataCenter(DataCenterID dc_id, unsigned int num_of_servers);
     ~DataCenter()= default;
     ServerID AllocateServer(ServerID id, OS os);
-    void ReceivedServer(ServerID);
+    void ReturnServer(ServerID);
     class NoFreeServers : public std::exception{};
-    class ServersNotOccupied : public std::exception{};
+    class ServerNotOccupied : public std::exception{};
 };
 
 /*!
