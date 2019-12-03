@@ -26,18 +26,18 @@ class AVLTree{
     const Compare<T>* cmp;
 
 public:
+    class Iterator;
+    Iterator begin() const;
+    Iterator end() const;
     explicit AVLTree(const Compare<K>& cmp =Less<K>());
     AVLTree(const AVLTree&);
     AVLTree& operator=(const AVLTree&);
     ~AVLTree();
-    Node* find(K key);
-    Node* insert(K key, T data);
+    Iterator find(K key);// TODO: what to return if not found
+    Iterator insert(K key, T data);
     void erase(K key);
     bool empty();
     void clear();
-    class Iterator;
-    Iterator begin() const;
-    Iterator end() const;
     class KeyNotExists : public exception{};
 };
 

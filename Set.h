@@ -19,8 +19,8 @@ public:
     Iterator insert(const K& key, const T& data=T());
     void erase(const K& key);
     //void erase(const Iterator&);
-    class KeyNotExists : public exception{};
-    class KeyAlreadyExists : public exception{};
+    class KeyNotExists : public AVLTree<K,int>::KeyNotExists{};
+    class KeyAlreadyExists : public AVLTree<K,int>::KeyAlreadyExists{};
 };
 
 template <class K>
