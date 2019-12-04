@@ -14,11 +14,6 @@ public:
     virtual bool operator()(K key1, K key2){return key1<key2;};
 };
 
-template <class K>
-class Less : public Compare<K>{
-    bool operator()(K key1, K key2){return key1<key2;};
-};
-
 template <class K, class T>
 class AVLTree{
 protected:    //TODO: remove after test
@@ -33,18 +28,15 @@ public:
     Iterator begin() const;
     Iterator end() const;
     explicit AVLTree(Compare<K> cmp=Compare<K>()): root(nullptr), cmp(cmp){}
-    AVLTree(const AVLTree &tree);
-    AVLTree<K, T>& operator=(const AVLTree & tree);
-    ~AVLTree();
+    //AVLTree(const AVLTree &tree);
+    //AVLTree<K, T>& operator=(const AVLTree & tree);
+    ~AVLTree() = default;
     Iterator find(const K& key) const;// TODO: what to return if not found
     Iterator insert(const K& key, const T& data=T());
-    void erase(const K& key);
+    //void erase(const K& key);
     bool empty() const;
-    void clear();
+    //void clear();
     class KeyNotExists : public exception{};
-
-
-
     void print_inorder();
 };
 
@@ -100,7 +92,11 @@ typename AVLTree<K,T>::Node *AVLTree<K,T>::find_req(const K &key, AVLTree::Node 
 
 template <class K, class T>
 typename AVLTree<K,T>::Iterator AVLTree<K,T>::find(const K &key) const {
-    return Iterator(find_req(key, root));
+    Node *n = find_req(key, root);
+    if(!n){
+        throw KeyNotExists();
+    }
+    return Iterator(n);
 }
 
 template<class K, class T>
@@ -307,6 +303,5 @@ template<class K, class T>
 const Pair<K, T>& AVLTree<K, T>::Iterator::operator*() const {
     return Pair<K,T>(node->key, node->data);
 }
-
 
 #endif //AVLTREE_H
