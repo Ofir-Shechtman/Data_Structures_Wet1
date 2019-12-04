@@ -69,7 +69,7 @@ protected:   //TODO: remove after test
     void Father();
 public:
     explicit Iterator(Node* root= nullptr);
-    const Pair<K,T>& operator*() const;   //TODO: remove after test
+    Pair<K,T> operator*() const;   //TODO: remove after test
     Iterator& operator++();
     bool operator!=(const Iterator& it) const;
     class InvalidIterator : public exception{};
@@ -300,7 +300,7 @@ bool AVLTree<K, T>::empty() const{
 
 
 template<class K, class T>
-const Pair<K, T>& AVLTree<K, T>::Iterator::operator*() const {
+Pair<K, T> AVLTree<K, T>::Iterator::operator*() const {
     return Pair<K,T>(node->key, node->data);
 }
 

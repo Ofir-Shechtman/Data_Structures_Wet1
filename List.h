@@ -175,11 +175,11 @@ void List<T>::pop_front() {
 template<class T>
 bool List<T>::empty() const{
     return tail==nullptr;
+}
 
 /*!
  * returns the number of elements of the list
  */
-}
 template<class T>
 const int & List<T>::size() const {
     return list_size;
