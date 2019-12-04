@@ -1,5 +1,8 @@
+#ifndef AVLTREE_H
+#define AVLTREE_H
 #include <iostream>
 #include "Stack.h"
+#include "Pair.h"
 
 using namespace std;
 
@@ -10,8 +13,15 @@ public:
     virtual ~Compare()= default;
     virtual bool operator()(K key1, K key2){return key1<key2;};
 };
+
+template <class K>
+class Less : public Compare<K>{
+    bool operator()(K key1, K key2){return key1<key2;};
+};
+
 template <class K, class T>
 class AVLTree{
+protected:    //TODO: remove after test
     struct Node;
     Node *root;
     Compare<K> cmp;
@@ -19,21 +29,21 @@ class AVLTree{
     Node *insert_req(const K &key, const T &data, Node* n, Stack<Node*>* s);
     void print_inorder_req(Node *n);
 public:
+    class Iterator;
+    Iterator begin() const;
+    Iterator end() const;
     explicit AVLTree(Compare<K> cmp=Compare<K>()): root(nullptr), cmp(cmp){}
     AVLTree(const AVLTree &tree);
     AVLTree<K, T>& operator=(const AVLTree & tree);
     ~AVLTree();
-
-    Node *find(const K &key);
-    Node *insert(const K &key,const T &data);
-    void erase(const K &key);
-    void clear();
+    Iterator find(const K& key) const;// TODO: what to return if not found
+    Iterator insert(const K& key, const T& data=T());
+    void erase(const K& key);
     bool empty() const;
+    void clear();
     class KeyNotExists : public exception{};
 
-    class Iterator;
-    Iterator begin() const;
-    Iterator end() const;
+
 
     void print_inorder();
 };
@@ -56,6 +66,23 @@ struct AVLTree<K,T>::Node{
     void RL();
 };
 
+
+template <class K, class T>
+class AVLTree<K,T>::Iterator{
+protected:   //TODO: remove after test
+    Node* node;
+    Stack<Node*> stack;
+    void Left();
+    void Right();
+    void Father();
+public:
+    explicit Iterator(Node* root= nullptr);
+    const Pair<K,T>& operator*() const;   //TODO: remove after test
+    Iterator& operator++();
+    bool operator!=(const Iterator& it) const;
+    class InvalidIterator : public exception{};
+};
+
 template <class K, class T>
 typename AVLTree<K,T>::Node *AVLTree<K,T>::find_req(const K &key, AVLTree::Node *n) {
     if(n == nullptr){
@@ -70,16 +97,82 @@ typename AVLTree<K,T>::Node *AVLTree<K,T>::find_req(const K &key, AVLTree::Node 
     return n;
 }
 
+
 template <class K, class T>
-typename AVLTree<K,T>::Node *AVLTree<K,T>::find(const K &key) {
-    return find_req(key, root);
+typename AVLTree<K,T>::Iterator AVLTree<K,T>::find(const K &key) const {
+    return Iterator(find_req(key, root));
+}
+
+template<class K, class T>
+typename AVLTree<K,T>::Iterator AVLTree<K, T>::begin() const {
+    return AVLTree::Iterator(root);
+}
+
+template<class K, class T>
+typename AVLTree<K,T>::Iterator AVLTree<K, T>::end() const {
+    return AVLTree::Iterator(nullptr);
 }
 
 template <class K, class T>
-typename AVLTree<K,T>::Node *AVLTree<K,T>::insert(const K &key, const T &data) {
+void AVLTree<K,T>::Iterator::Left() {
+    stack.push(node);
+    node=node->left;
+}
+
+template <class K, class T>
+void AVLTree<K,T>::Iterator::Right() {
+    stack.push(node);
+    node=node->right;
+}
+
+template <class K, class T>
+void AVLTree<K,T>::Iterator::Father() {
+    node= stack.top();
+    stack.pop();
+}
+
+template <class K, class T>
+AVLTree<K,T>::Iterator::Iterator(Node* root):node(root), stack(Stack<Node*>()){
+    if(!node)
+        return;
+    while(node->left)
+        Left();
+}
+
+template <class K, class T>
+typename AVLTree<K,T>::Iterator &AVLTree<K,T>::Iterator::operator++() {
+    if(node== nullptr)
+        throw InvalidIterator();
+    if(node->right){
+        Right();
+        while(node->left)
+            Left();
+        return *this;
+    }
+    while(true) {
+        if (stack.empty()) {
+            node = nullptr;
+            return *this;
+        }
+        if(stack.top()->left==node){
+            Father();
+            return *this;
+        }
+        Father();
+    }
+}
+
+
+template <class K, class T>
+bool AVLTree<K,T>::Iterator::operator!=(const AVLTree<K, T>::Iterator& it) const {
+    return node!=it.node;
+}
+
+template <class K, class T>
+typename AVLTree<K,T>::Iterator AVLTree<K,T>::insert(const K &key, const T &data) {
     if(root == nullptr){
         root = new Node(key,data);
-        return root;
+        return Iterator(root);
     }
     Stack<Node*> s;
     AVLTree::Node *new_node = insert_req(key, data, root, &s);
@@ -92,7 +185,7 @@ typename AVLTree<K,T>::Node *AVLTree<K,T>::insert(const K &key, const T &data) {
         unsigned int right = n->right ? n->right->height : 0;
         n->height=max(left, right)+1;
     }
-    return new_node;
+    return Iterator(new_node);
 }
 
 template <class K, class T>
@@ -205,34 +298,15 @@ void AVLTree<K,T>::Node::RL() {
 }
 
 template<class K, class T>
-bool AVLTree<K, T>::empty() {
-    if(root == nullptr){
-        return true;
-    }
-    return false;
+bool AVLTree<K, T>::empty() const{
+    return root == nullptr;
 }
+
 
 template<class K, class T>
-AVLTree<K, T>::AVLTree(const AVLTree &tree) {
-    root = tree.root;
-    cmp = tree.cmp;
+const Pair<K, T>& AVLTree<K, T>::Iterator::operator*() const {
+    return Pair<K,T>(node->key, node->data);
 }
 
-template<class K, class T>
-AVLTree<K, T>& AVLTree<K, T>::operator=(const AVLTree &tree) {
-    root = tree.root;
-    cmp = tree.cmp;
-    return *this;
-}
 
-int main() {
-    AVLTree<int,int> tree;
-    tree.insert(10,999);
-    tree.insert(30,999);
-    tree.insert(5,999);
-    tree.insert(35,999);
-    tree.insert(20,999);
-    tree.insert(15,999);
-    tree.print_inorder();
-    return 0;
-}
+#endif //AVLTREE_H

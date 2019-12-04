@@ -2,7 +2,6 @@
 #define SET_H
 
 #include "AVLTree.h"
-#include "SparseMatrix.h"
 
 template <class K>
 class Set {
@@ -12,11 +11,11 @@ public:
     Iterator begin() const;
     Iterator end() const;
     explicit Set(const Compare<K>& cmp=Compare<K>());
-    bool empty();
+    bool empty() const;
     //unsigned int size();
     void clear();
     Iterator find(const K& key);
-    Iterator insert(const K& key, const T& data=T());
+    Iterator insert(const K& key);
     void erase(const K& key);
     //void erase(const Iterator&);
     class KeyNotExists : public AVLTree<K,int>::KeyNotExists{};
@@ -28,15 +27,15 @@ class Set<K>::Iterator{
     typename AVLTree<K, int>::Iterator iterator;
 public:
     Iterator()= default;
-    const T& operator*() const;
+    const K& operator*() const;
     Iterator& operator++();
     bool operator!=(const Iterator& it) const;
     class InvalidIterator : public exception{};
 };
 
 template<class K>
-const T &Set<K>::Iterator::operator*() const {
-    return iterator.key();
+const K &Set<K>::Iterator::operator*() const {
+    return (*iterator).second;
 }
 
 template<class K>
@@ -53,7 +52,7 @@ template<class K>
 Set<K>::Set(const Compare<K> &cmp) : tree(AVLTree<K, int>(cmp)){}
 
 template<class K>
-bool Set<K>::empty() {
+bool Set<K>::empty() const{
     return tree.empty();
 }
 
@@ -69,7 +68,7 @@ typename Set<K>::Iterator Set<K>::find(const K &key) {
 }
 
 template<class K>
-typename Set<K>::Iterator Set<K>::insert(const K &key, const T &data) {
+typename Set<K>::Iterator Set<K>::insert(const K &key) {
     return Set::Iterator(tree.insert(key));
 }
 

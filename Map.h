@@ -11,11 +11,11 @@ public:
     Iterator begin() const;
     Iterator end() const;
     Map()= default;
-    bool empty();
+    bool empty() const;
     //unsigned int size();
     void clear();
     Iterator find(const K& key);
-    Iterator insert(const K& key, const T& data=T());
+    //Iterator insert(const K& key, const T& data=T());
     T& at(const K& key); //if key not found throw KeyNotExists
     T& operator[](const K& key); //if key not found insert it(default C'tor)
     void erase(const K& key);
@@ -43,7 +43,7 @@ Map<K, T>::Iterator::Iterator(
 
 template<class K, class T>
 const T &Map<K, T>::Iterator::operator*() const {
-    return iterator.data();
+    return (*iterator).second;
 }
 
 template<class K, class T>
@@ -58,7 +58,7 @@ Map<K, T>::Iterator::operator!=(const Map<K, T>::Iterator &it) const {
 }
 
 template<class K, class T>
-bool Map<K, T>::empty() {
+bool Map<K, T>::empty() const{
     return false;
 }
 
@@ -87,10 +87,10 @@ T &Map<K, T>::at(const K &key) {
 }
 
 template<class K, class T>
-T &Map<K, T>::operator[](const K &key) {
+T& Map<K, T>::operator[](const K &key) {
     auto it= tree.find(key);
     if(it==tree.end())
-        tree.insert(key);
+        it=tree.insert(key);
     return *it;
 }
 
