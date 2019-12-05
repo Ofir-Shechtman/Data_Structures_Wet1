@@ -61,3 +61,15 @@ void DataCenter::ReturnServer(ServerID id) {
     server.iterator=queue.push_back(id);
     server.state=Available;
 }
+
+unsigned int DataCenter::get_servers() {
+    return servers.size;
+}
+
+unsigned int DataCenter::get_windows() {
+    return windows_counter;
+}
+
+unsigned int DataCenter::get_linux() {
+    return get_servers()-get_windows();
+}

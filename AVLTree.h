@@ -20,7 +20,7 @@ protected:    //TODO: remove after test
     struct Node;
     Node *root;
     Compare<K> cmp;
-    Node *find_req(const K &key, Node *n);
+    Node *find_req(const K &key, Node *n, Stack<Node*>* s= nullptr);
     Node *insert_req(const K &key, const T &data, Node* n, Stack<Node*>* s);
     void print_inorder_req(Node *n);
 public:
@@ -33,7 +33,7 @@ public:
     ~AVLTree() = default;
     Iterator find(const K& key) const;// TODO: what to return if not found
     Iterator insert(const K& key, const T& data=T());
-    //void erase(const K& key);
+    void erase(const K& key);
     bool empty() const;
     //void clear();
     class KeyNotExists : public exception{};
@@ -68,6 +68,7 @@ protected:   //TODO: remove after test
     void Right();
     void Father();
 public:
+    friend AVLTree;
     explicit Iterator(Node* root= nullptr);
     Pair<K,T> operator*() const;   //TODO: remove after test
     Iterator& operator++();
@@ -75,16 +76,20 @@ public:
     class InvalidIterator : public exception{};
 };
 
+
+
 template <class K, class T>
-typename AVLTree<K,T>::Node *AVLTree<K,T>::find_req(const K &key, AVLTree::Node *n) {
-    if(n == nullptr){
+typename AVLTree<K,T>::Node* AVLTree<K,T>::find_req(const K &key, AVLTree::Node *n, Stack<Node*> *s) {
+    if(n == nullptr)
         return nullptr;
-    }
-    else if(cmp(key, n->key)){
-        return find_req(key, n->left);
+    if(s)
+        s->push(n);
+
+    if(cmp(key, n->key)){
+        return find_req(key, n->left, s);
     }
     else if(cmp(n->key, key)){
-        return find_req(key, n->right);
+        return find_req(key, n->right, s);
     }
     return n;
 }
@@ -297,6 +302,52 @@ template<class K, class T>
 bool AVLTree<K, T>::empty() const{
     return root == nullptr;
 }
+
+template<class K, class T>
+void AVLTree<K, T>::erase(const K &key) {
+    Stack<Node*> s;
+    Node* n=find_req(key, root, &s);
+    if(!n)
+        return;
+    Node* father=s.top();
+    //CASE 1: no children
+    if(!n->right && !n->left){
+        if(father)
+            father->left==n ? father->left= nullptr : father->right= nullptr;
+        delete n;
+        if(father)
+            father->balance();
+    }
+    //CASE 2: one child
+    else if(!n->right || !n->left){
+        if(n->right){
+            swap(n->key, n->right->key);
+            swap(n->data, n->right->data);
+            delete n->right;
+            n->right= nullptr;
+        }
+        else{
+            swap(n->key, n->left->key);
+            swap(n->data, n->left->data);
+            delete n->left;
+            n->left= nullptr;
+        }
+        n->balance();
+    }
+    //CASE 3: has 2 children
+    else{
+        Iterator it(root);
+        it.node=n;
+        it.stack=s;
+        Node* next= (++it).node;
+        swap(n->key, next->key);
+        swap(n->data, next->data);
+        erase(next->key);
+        next->balance();
+    }
+
+}
+
 
 
 template<class K, class T>

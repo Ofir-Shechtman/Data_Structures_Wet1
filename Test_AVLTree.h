@@ -9,6 +9,7 @@ class AVLTree_test : public AVLTree<int, int>{
 public:
     ~AVLTree_test(){
         delete root;
+        root= nullptr;
     }
     friend string print(AVLTree_test::Node* tree);
     Node* get_root() const{
@@ -87,6 +88,14 @@ void AVLTree_Test(){
     test(t, "{(20,(10,,(15,,)),(30,(25,,),(35,,)))}");
     test(t.is_sorted(), "True");
 
+    t.erase(15);
+    test(t, "{(30,(20,(10,,),(25,,)),(35,,))}");
+    t.insert(15);
+    t.erase(10);
+    test(t, "{(30,(20,(15,,),(25,,)),(35,,))}");
+    t.erase(10);
+
+    /*
     t.~AVLTree_test();
 
     t.insert(10);
@@ -103,6 +112,18 @@ void AVLTree_Test(){
     test(t, "{(20,(10,(5,,),(15,,)),(30,,(35,,)))}");
     test(t.is_sorted(), "True");
 
+    t.~AVLTree_test();
+
+    int arr[100]={16, 91, 80, 53, 41, 28, 12, 10, 81, 97, 1, 84, 36, 52, 64, 68, 60, 40, 7, 67, 4, 54, 30, 66, 34, 3, 23, 48, 73, 27, 45, 92, 76, 70, 47, 88, 9, 82, 5, 46, 26, 42, 83, 90, 77, 6, 38, 58, 13, 56, 21, 98, 87, 61, 37, 89, 24, 32, 2, 33, 59, 62, 78, 39, 57, 51, 79, 69, 86, 55, 65, 96, 99, 94, 17, 29, 25, 85, 22, 8, 71, 18, 15, 74, 63, 20, 19, 0, 44, 93, 95, 43, 50, 49, 31, 72, 35, 14, 75, 11};
+    for(int i : arr){
+        t.insert(i);
+    }
+    test(t.is_sorted(), "True");
+    t.erase(15);
+    t.erase(50);
+    t.erase(95);
+    test(t.is_sorted(), "True");
+*/
 
 
     total();

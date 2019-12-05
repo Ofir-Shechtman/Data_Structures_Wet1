@@ -28,6 +28,10 @@ public:
     ~DataCenter()= default;
     ServerID AllocateServer(ServerID id, OS os);
     void ReturnServer(ServerID);
+    unsigned int get_servers();
+    unsigned int get_windows();
+    unsigned int get_linux();
+
     class NoFreeServers : public std::exception{};
     class ServerNotOccupied : public std::exception{};
 };
