@@ -2,7 +2,7 @@
 #define ARRAY_H
 
 
-#include "SparseMatrix.h"
+//#include "SparseMatrix.h"
 
 template<class T>
 class Array {

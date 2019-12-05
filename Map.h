@@ -12,13 +12,13 @@ public:
     Iterator end() const;
     Map()= default;
     bool empty() const;
+    Iterator find(const K& key);
+    void erase(const K& key);
     //unsigned int size();
     void clear();
-    Iterator find(const K& key);
-    //Iterator insert(const K& key, const T& data=T());
+    Iterator insert(const K& key, const T& data);
     T& at(const K& key); //if key not found throw KeyNotExists
     T& operator[](const K& key); //if key not found insert it(default C'tor)
-    void erase(const K& key);
     //void erase(const Iterator&);
     class KeyNotExists : public AVLTree<K,int>::KeyNotExists{};
     class KeyAlreadyExists : public AVLTree<K,int>::KeyAlreadyExists{};

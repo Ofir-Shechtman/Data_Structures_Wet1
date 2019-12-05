@@ -20,6 +20,7 @@ protected:    //TODO: remove after test
     struct Node;
     Node *root;
     Compare<K> cmp;
+    unsigned int size;
     Node *find_req(const K &key, Node *n, Stack<Node*>* s= nullptr);
     Node *insert_req(const K &key, const T &data, Node* n, Stack<Node*>* s);
     void print_inorder_req(Node *n);
@@ -27,7 +28,7 @@ public:
     class Iterator;
     Iterator begin() const;
     Iterator end() const;
-    explicit AVLTree(Compare<K> cmp=Compare<K>()): root(nullptr), cmp(cmp){}
+    explicit AVLTree(Compare<K> cmp=Compare<K>()): root(nullptr), cmp(cmp), size(0){}
     //AVLTree(const AVLTree &tree);
     //AVLTree<K, T>& operator=(const AVLTree & tree);
     ~AVLTree() = default;
@@ -35,6 +36,7 @@ public:
     Iterator insert(const K& key, const T& data=T());
     void erase(const K& key);
     bool empty() const;
+    int get_size() const;
     //void clear();
     class KeyNotExists : public exception{};
     void print_inorder();
@@ -75,8 +77,6 @@ public:
     bool operator!=(const Iterator& it) const;
     class InvalidIterator : public exception{};
 };
-
-
 
 template <class K, class T>
 typename AVLTree<K,T>::Node* AVLTree<K,T>::find_req(const K &key, AVLTree::Node *n, Stack<Node*> *s) {
@@ -173,6 +173,7 @@ template <class K, class T>
 typename AVLTree<K,T>::Iterator AVLTree<K,T>::insert(const K &key, const T &data) {
     if(root == nullptr){
         root = new Node(key,data);
+        size++;
         return Iterator(root);
     }
     Stack<Node*> s;
@@ -196,6 +197,7 @@ typename AVLTree<K,T>::Node *AVLTree<K,T>::insert_req(const K &key, const T &dat
     if(cmp(key, n->key)){
         if(n->left == nullptr){
             n->left = new Node(key, data);
+            size++;
             return n->left;
         }
         else{
@@ -205,6 +207,7 @@ typename AVLTree<K,T>::Node *AVLTree<K,T>::insert_req(const K &key, const T &dat
     else if(cmp(n->key, key)){
         if(n->right == nullptr){
             n->right = new Node(key, data);
+            size++;
             return n->right;
         }
         else {
@@ -348,7 +351,10 @@ void AVLTree<K, T>::erase(const K &key) {
 
 }
 
-
+template<class K, class T>
+int AVLTree<K, T>::get_size() const {
+    return size;
+}
 
 template<class K, class T>
 Pair<K, T> AVLTree<K, T>::Iterator::operator*() const {

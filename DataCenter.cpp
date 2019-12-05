@@ -62,14 +62,14 @@ void DataCenter::ReturnServer(ServerID id) {
     server.state=Available;
 }
 
-unsigned int DataCenter::get_servers() {
-    return servers.size;
-}
-
-unsigned int DataCenter::get_windows() {
+unsigned int DataCenter::get_windows() const{
     return windows_counter;
 }
 
-unsigned int DataCenter::get_linux() {
-    return get_servers()-get_windows();
+unsigned int DataCenter::get_linux() const{
+    return servers.size-get_windows();
+}
+
+unsigned int DataCenter::get_ID() const{
+    return dc_id;
 }

@@ -2,8 +2,6 @@
 #include "DataCenter.h"
 using namespace std;
 
-
-
 string print_queue(const List<ServerID>& list){
     string result= "{";
     for(ServerID id : list){
