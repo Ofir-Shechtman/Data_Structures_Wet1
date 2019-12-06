@@ -23,8 +23,8 @@ public:
 
 class DataServer{
     Map<DataCenterID, DataCenter> data_centers;
-    Set<DataCenter*> data_center_by_windows;
     Set<DataCenter*> data_center_by_linux;
+    Set<DataCenter*> data_center_by_windows;
 public:
     DataServer();
     ~DataServer() = default;

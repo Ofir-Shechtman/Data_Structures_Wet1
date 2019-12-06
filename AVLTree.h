@@ -225,10 +225,7 @@ typename AVLTree<K,T>::Node *AVLTree<K,T>::insert_req(const K &key, const T &dat
             insert_req(key, data, n->right, s);
         }
     }
-    else{
-        throw KeyAlreadyExists();
-    }
-
+    throw KeyAlreadyExists();
 }
 
 template <class K, class T>

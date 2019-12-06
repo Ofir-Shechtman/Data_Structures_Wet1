@@ -17,11 +17,11 @@ typedef unsigned int DataCenterID;
  */
 class DataCenter {
 protected://just for testing
+    DataCenterID dc_id;
     struct Server;
     Array<Server> servers;
     List<ServerID> windows_queue;
     List<ServerID> linux_queue;
-    DataCenterID dc_id;
     unsigned int windows_counter;
 public:
     DataCenter(DataCenterID dc_id, unsigned int num_of_servers);

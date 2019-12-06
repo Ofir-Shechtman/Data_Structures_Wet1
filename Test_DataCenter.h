@@ -37,7 +37,7 @@ public:
 
 string TestDataServer::print_servers() const {
     string result= "Servers[";
-    for(int i=0;i<servers.size(); ++i){
+    for(unsigned int i=0;i<servers.size(); ++i){
         const Server& s= servers[i];
         string state = s.state==Occupied ? "Oc" : "Av";
         string os = s.os==Linux ? "Lin" : "Win";

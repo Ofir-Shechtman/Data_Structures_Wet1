@@ -7,8 +7,8 @@
 template<class T>
 class Array {
 private:
-    T* data;
     unsigned int array_size;
+    T* data;
 public:
     unsigned int size() const;
     explicit Array(unsigned int size);
