@@ -23,29 +23,6 @@ public:
         sort.sort();
         return l==sort;
     }
-    void printBT(const std::string& prefix, const Node* node, bool isLeft)
-    {
-        if( node != nullptr )
-        {
-            std::cout << prefix;
-
-            std::cout << (isLeft ? "├──" : "└──" );
-
-            // print the value of the node
-            std::cout << node->key << std::endl;
-
-            // enter the next tree level - left and right branch
-            printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
-            printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
-        }
-    }
-
-    void printBT(const Node* node)
-    {
-        printBT("", node, false);
-    }
-
-
 
 };
 
@@ -95,8 +72,8 @@ void AVLTree_Test(){
     test(t, "{(30,(20,(15,,),(25,,)),(35,,))}");
     t.erase(10);
 
-    /*
-    t.~AVLTree_test();
+
+    t.clear();
 
     t.insert(10);
     test(t, "{(10,,)}");
@@ -112,7 +89,7 @@ void AVLTree_Test(){
     test(t, "{(20,(10,(5,,),(15,,)),(30,,(35,,)))}");
     test(t.is_sorted(), "True");
 
-    t.~AVLTree_test();
+    t.clear();
 
     int arr[100]={16, 91, 80, 53, 41, 28, 12, 10, 81, 97, 1, 84, 36, 52, 64, 68, 60, 40, 7, 67, 4, 54, 30, 66, 34, 3, 23, 48, 73, 27, 45, 92, 76, 70, 47, 88, 9, 82, 5, 46, 26, 42, 83, 90, 77, 6, 38, 58, 13, 56, 21, 98, 87, 61, 37, 89, 24, 32, 2, 33, 59, 62, 78, 39, 57, 51, 79, 69, 86, 55, 65, 96, 99, 94, 17, 29, 25, 85, 22, 8, 71, 18, 15, 74, 63, 20, 19, 0, 44, 93, 95, 43, 50, 49, 31, 72, 35, 14, 75, 11};
     for(int i : arr){
@@ -123,7 +100,7 @@ void AVLTree_Test(){
     t.erase(50);
     t.erase(95);
     test(t.is_sorted(), "True");
-*/
+
 
 
     total();

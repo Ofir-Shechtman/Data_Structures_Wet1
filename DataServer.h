@@ -11,20 +11,20 @@ using namespace std;
 template<class K>
 class CompareDataCenterByLinux : public Compare<K>{
 public:
-    bool operator()(K a,K b);
+    bool operator()(const K& a,const K& b) const;
 };
 
 template<class K>
 class CompareDataCenterByWindows: public Compare<K>{
 public:
-    bool operator()(K a,K b);
+    bool operator()(const K& a,const K& b) const;
 };
 
 
 class DataServer{
     Map<DataCenterID, DataCenter> DataCenterTree;
-    Set<const DataCenter*> DataCenterWindowsTree;
-    Set<const DataCenter*> DataCenterLinuxTree;
+    Set<DataCenter*> DataCenterWindowsTree;
+    Set<DataCenter*> DataCenterLinuxTree;
 public:
     DataServer();
     ~DataServer() = default;

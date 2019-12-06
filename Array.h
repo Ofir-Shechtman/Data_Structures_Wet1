@@ -13,7 +13,7 @@ public:
     explicit Array(unsigned int size);
     ~Array();
     Array(const Array<T>&);
-    Array<T>& operator=(const Array&);
+    Array<T>& operator=(const Array&)=delete;
     T& operator[](unsigned int index);
     const T& operator[](unsigned int index) const;
     const T& operator*() const;
@@ -35,19 +35,20 @@ Array<T>::~Array() {
     delete[] data;
 }
 
+/*
 template<class T>
 Array<T> &Array<T>::operator=(const Array& array) {
-    if (array==*this)
+    if (&array==this)
         return *this;
     delete data;
     size=array.size;
-    data(new T[size]);
+    data= new T[size];
     for(int i=0; i<size; ++i){
         data[i]= array[i];
     }
     return *this;
 }
-
+*/
 template<class T>
 T &Array<T>::operator[](unsigned int index) {
     return data[index];

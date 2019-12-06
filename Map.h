@@ -14,10 +14,10 @@ public:
     bool empty() const;
     Iterator find(const K& key);
     void erase(const K& key);
-    //unsigned int size();
+    unsigned int size();
     void clear();
     Iterator insert(const K& key, const T& data);
-    T& at(const K& key); //if key not found throw KeyNotExists
+    const T& at(const K& key) const; //if key not found throw KeyNotExists
     T& operator[](const K& key); //if key not found insert it(default C'tor)
     //void erase(const Iterator&);
     class KeyNotExists : public AVLTree<K,int>::KeyNotExists{};
@@ -28,7 +28,7 @@ template<class K, class T>
 class Map<K, T>::Iterator{
     typename AVLTree<K, T>::Iterator iterator;
 public:
-    explicit Iterator(typename AVLTree<K, T>::Iterator iterator);
+    explicit Iterator(typename AVLTree<K, T>::Iterator iterator = AVLTree<K, T>::Iterator());
     const T& operator*() const;
     Iterator& operator++();
     bool operator!=(const Iterator& it) const;
@@ -37,13 +37,11 @@ public:
 
 template<class K, class T>
 Map<K, T>::Iterator::Iterator(
-        typename AVLTree<K, T>::Iterator iterator) {
-    return AVLTree<K, T>::Iterator(iterator);
-}
+        typename AVLTree<K, T>::Iterator iterator):iterator(iterator){}
 
 template<class K, class T>
-const T &Map<K, T>::Iterator::operator*() const {
-    return (*iterator).second;
+const T& Map<K, T>::Iterator::operator*() const {
+    return iterator.data();
 }
 
 template<class K, class T>
@@ -54,7 +52,7 @@ typename Map<K, T>::Iterator &Map<K, T>::Iterator::operator++() {
 template<class K, class T>
 bool
 Map<K, T>::Iterator::operator!=(const Map<K, T>::Iterator &it) const {
-    return iterator==it;
+    return Iterator(iterator)!=it;
 }
 
 template<class K, class T>
@@ -79,19 +77,21 @@ typename Map<K, T>::Iterator Map<K, T>::insert(const K &key, const T &data) {
 }
 
 template<class K, class T>
-T &Map<K, T>::at(const K &key) {
-    auto it= tree.find(key);
-    if(it==tree.end())
-        throw KeyNotExists();
-    return *it;
+const T &Map<K, T>::at(const K &key) const{
+    auto it= Iterator(tree.find(key));
+    if(it!=end())
+        return *it;
+    throw KeyNotExists();
+
 }
 
 template<class K, class T>
 T& Map<K, T>::operator[](const K &key) {
-    auto it= tree.find(key);
-    if(it==tree.end())
-        it=tree.insert(key);
-    return *it;
+    auto it= Iterator(tree.find(key));
+    if(it!=end())
+        return *it;
+    it=tree.insert(key);
+
 }
 
 template<class K, class T>
@@ -108,6 +108,11 @@ typename Map<K, T>::Iterator Map<K, T>::begin() const {
 template<class K, class T>
 typename Map<K, T>::Iterator Map<K, T>::end() const {
     return Map::Iterator(tree.end());
+}
+
+template<class K, class T>
+unsigned int Map<K, T>::size() {
+    return tree.get_size();
 }
 
 
