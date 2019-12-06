@@ -1,5 +1,5 @@
-#ifndef DATA_STRUCTURES_WET1_DATASERVER_H
-#define DATA_STRUCTURES_WET1_DATASERVER_H
+#ifndef DATASERVER_H
+#define DATASERVER_H
 
 #include <iostream>
 #include "DataCenter.h"
@@ -8,32 +8,32 @@
 
 using namespace std;
 
-template<class K>
-class CompareDataCenterByLinux : public Compare<K>{
+template<class DC>
+class CompareDataCenterByLinux : public Compare<DC>{
 public:
-    bool operator()(const K& a,const K& b) const;
+    bool operator()(const DC& a, const DC& b) const;
 };
 
-template<class K>
-class CompareDataCenterByWindows: public Compare<K>{
+template<class DC>
+class CompareDataCenterByWindows: public Compare<DC>{
 public:
-    bool operator()(const K& a,const K& b) const;
+    bool operator()(const DC& a, const DC& b) const;
 };
 
 
 class DataServer{
-    Map<DataCenterID, DataCenter> DataCenterTree;
-    Set<DataCenter*> DataCenterWindowsTree;
-    Set<DataCenter*> DataCenterLinuxTree;
+    Map<DataCenterID, DataCenter> data_centers;
+    Set<DataCenter*> data_center_by_windows;
+    Set<DataCenter*> data_center_by_linux;
 public:
     DataServer();
     ~DataServer() = default;
-    void AddDataCenter(int dataCenterID, int numOfServers);
-    void RemoveDataCenter(int dataCenterID);
-    ServerID RequestServer(int dataCenterID, int serverID, int os);
-    void FreeServer(int dataCenterID, int serverID);
-    Array<DataCenterID> GetDataCentersByOS(int os);
+    void AddDataCenter(DataCenterID dc_id, int numOfServers);
+    void RemoveDataCenter(DataCenterID dc_id);
+    ServerID RequestServer(DataCenterID dc_id, ServerID server_id, OS os);
+    void FreeServer(DataCenterID dc_id, ServerID server_id);
+    Array<DataCenterID> GetDataCentersByOS(OS os);
 };
 
 
-#endif //DATA_STRUCTURES_WET1_DATASERVER_H
+#endif //DATASERVER_H

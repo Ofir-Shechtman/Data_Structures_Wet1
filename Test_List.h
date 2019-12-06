@@ -1,3 +1,6 @@
+#ifndef TEST_MAP_H
+#define TEST_MAP_H
+
 #include "Test_utility.h"
 #include "List.h"
 using namespace std;
@@ -105,3 +108,4 @@ void List_Test(){
     total();
 }
 
+#endif //TEST_MAP_H

@@ -1,3 +1,5 @@
+#ifndef TEST_DATACENTER_H
+#define TEST_DATACENTER_H
 #include "Test_utility.h"
 #include "DataCenter.h"
 using namespace std;
@@ -24,7 +26,7 @@ public:
     string print_windows_queue() const{return print_queue(windows_queue);};
     string print_linux_queue() const{return print_queue(linux_queue);};
     string print() const{
-        string result= "ID:" + to_string(dc_id) + ", Servers:" + to_string(servers.array_size()) + ", WinCount:" + to_string(windows_counter);
+        string result= "ID:" + to_string(dc_id) + ", Servers:" + to_string(servers.size()) + ", WinCount:" + to_string(windows_counter);
         result += ", "+print_servers();
         result += ", Win"+print_windows_queue();
         result += ", Lin"+print_linux_queue();
@@ -35,14 +37,14 @@ public:
 
 string TestDataServer::print_servers() const {
     string result= "Servers[";
-    for(int i=0;i<servers.array_size(); ++i){
+    for(int i=0;i<servers.size(); ++i){
         const Server& s= servers[i];
         string state = s.state==Occupied ? "Oc" : "Av";
         string os = s.os==Linux ? "Lin" : "Win";
         result+= "("+to_string(s.id)+", "+os+", "+state+")";
         result+= ", ";
     }
-    if(servers.array_size > 0) {
+    if(servers.size() > 0) {
         result.pop_back();
         result.pop_back();
     }
@@ -78,3 +80,4 @@ void DataServer_Test(){
     total();
 }
 
+#endif //TEST_DATACENTER_H

@@ -1,50 +1,49 @@
 #include "DataServer.h"
 
 DataServer::DataServer() :
-        DataCenterLinuxTree(
+        data_center_by_linux(
         Set<DataCenter*>(CompareDataCenterByLinux<DataCenter*>())),
-        DataCenterWindowsTree(
+        data_center_by_windows(
         Set<DataCenter*>(CompareDataCenterByWindows<DataCenter*>())
                 ){}
 
-void DataServer::AddDataCenter(int dataCenterID, int numOfServers) {
-    DataCenter dc=DataCenter(dataCenterID, numOfServers);
-    auto it = DataCenterTree.insert(dataCenterID, dc);
+void DataServer::AddDataCenter(DataCenterID dc_id, int numOfServers) {
+    DataCenter dc=DataCenter(dc_id, numOfServers);
+    auto it = data_centers.insert(dc_id, dc);
     DataCenter p  = *it;
-    DataCenterWindowsTree.insert(&p);
-    DataCenterLinuxTree.insert(&p);
+    data_center_by_windows.insert(&p);
+    data_center_by_linux.insert(&p);
 }
 
-void DataServer::RemoveDataCenter(int dataCenterID) {
-    DataCenter dc = DataCenterTree.at(dataCenterID);
-    DataCenterWindowsTree.erase(&dc);
-    DataCenterLinuxTree.erase(&dc);
-    DataCenterTree.erase(dataCenterID);
+void DataServer::RemoveDataCenter(DataCenterID dc_id) {
+    DataCenter dc = data_centers.at(dc_id);
+    data_center_by_windows.erase(&dc);
+    data_center_by_linux.erase(&dc);
+    data_centers.erase(dc_id);
 }
 
-ServerID DataServer::RequestServer(int dataCenterID, int serverID, int os) {
-    DataCenter dc = DataCenterTree.at(dataCenterID);
-    DataCenterWindowsTree.erase(&dc);
-    DataCenterLinuxTree.erase(&dc);
-    OS requested_os = os==0 ? Linux : Windows;
-    ServerID s = dc.AllocateServer(serverID, requested_os);
-    DataCenterWindowsTree.insert(&dc);
-    DataCenterLinuxTree.insert(&dc);
+ServerID DataServer::RequestServer(DataCenterID dc_id, ServerID server_id, OS os) {
+    DataCenter dc = data_centers.at(dc_id);
+    data_center_by_windows.erase(&dc);
+    data_center_by_linux.erase(&dc);
+    ServerID s = dc.AllocateServer(server_id, os);
+    data_center_by_windows.insert(&dc);
+    data_center_by_linux.insert(&dc);
     return s;
 }
 
-void DataServer::FreeServer(int dataCenterID, int serverID) {
-    DataCenter dc = DataCenterTree.at(dataCenterID);
-    DataCenterWindowsTree.erase(&dc);
-    DataCenterLinuxTree.erase(&dc);
-    dc.ReturnServer(serverID);
-    DataCenterWindowsTree.insert(&dc);
-    DataCenterLinuxTree.insert(&dc);
+void DataServer::FreeServer(DataCenterID dc_id, ServerID server_id) {
+    DataCenter dc = data_centers.at(dc_id);
+    data_center_by_windows.erase(&dc);
+    data_center_by_linux.erase(&dc);
+    dc.ReturnServer(server_id);
+    data_center_by_windows.insert(&dc);
+    data_center_by_linux.insert(&dc);
 }
 
-Array<DataCenterID> DataServer::GetDataCentersByOS(int os) {
-    auto& set = os==0? DataCenterLinuxTree : DataCenterWindowsTree;
-    unsigned int size = DataCenterTree.size();
+Array<DataCenterID> DataServer::GetDataCentersByOS(OS os) {
+    auto& set = os==Linux ? data_center_by_linux : data_center_by_windows;
+    unsigned int size = data_centers.size();
     Array<DataCenterID> array(size);
     int i=0;
     for(auto &dc : set)
@@ -52,15 +51,15 @@ Array<DataCenterID> DataServer::GetDataCentersByOS(int os) {
     return array;
 }
 
-template<class K>
-bool CompareDataCenterByLinux<K>::operator()(const K& a,const K& b) const {
+template<class DC>
+bool CompareDataCenterByLinux<DC>::operator()(const DC& a, const DC& b) const {
     if(a->get_linux() == b->get_linux())
         return a->get_ID()<b->get_ID();
     return a->get_linux() < b->get_linux();
 }
 
-template<class K>
-bool CompareDataCenterByWindows<K>::operator()(const K& a,const K& b) const {
+template<class DC>
+bool CompareDataCenterByWindows<DC>::operator()(const DC& a, const DC& b) const {
     if(a->get_windows() == b->get_windows())
         return a->get_ID()<b->get_ID();
     return a->get_windows() < b->get_windows();

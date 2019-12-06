@@ -1,3 +1,6 @@
+#ifndef TEST_UTILITY_H
+#define TEST_UTILITY_H
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -37,3 +40,4 @@ void total(){
 }
 
 
+#endif //TEST_UTILITY_H

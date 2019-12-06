@@ -1,3 +1,6 @@
+#ifndef TEST_AVLTREE_H
+#define TEST_AVLTREE_H
+
 #include "Test_utility.h"
 #include "AVLTree.h"
 #include <map>
@@ -636,3 +639,4 @@ void AVLTree_Test(){
     total();
 }
 
+#endif //TEST_AVLTREE_H
