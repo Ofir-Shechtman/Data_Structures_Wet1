@@ -40,6 +40,7 @@ public:
     int size() const;
     void clear();
     class KeyNotExists : public exception{};
+    class KeyAlreadyExists : public exception{};
 };
 
 template <class K, class T>
@@ -224,7 +225,10 @@ typename AVLTree<K,T>::Node *AVLTree<K,T>::insert_req(const K &key, const T &dat
             insert_req(key, data, n->right, s);
         }
     }
-    return nullptr;
+    else{
+        throw KeyAlreadyExists();
+    }
+
 }
 
 template <class K, class T>

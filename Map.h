@@ -19,8 +19,8 @@ public:
     Iterator insert(const K& key, const T& data);
     const T& at(const K& key) const; //if key not found throw KeyNotExists
     //void erase(const Iterator&);
-    class KeyNotExists : public AVLTree<K,int>::KeyNotExists{};
-    class KeyAlreadyExists : public AVLTree<K,int>::KeyAlreadyExists{};
+    class KeyNotExists : public AVLTree<K,T>::KeyNotExists{};
+    class KeyAlreadyExists : public AVLTree<K,T>::KeyAlreadyExists{};
 };
 
 template<class K, class T>
@@ -72,16 +72,22 @@ typename Map<K, T>::Iterator Map<K, T>::find(const K &key) {
 
 template<class K, class T>
 typename Map<K, T>::Iterator Map<K, T>::insert(const K &key, const T &data) {
-    return Map::Iterator(tree.insert(key, data));
+    try{
+        return Map::Iterator(tree.insert(key, data));
+    }
+    catch (typename AVLTree<K,int>::KeyAlreadyExists&){
+        throw KeyAlreadyExists();
+    }
 }
 
 template<class K, class T>
 const T& Map<K, T>::at(const K &key) const{
-    auto it= Iterator(tree.find(key));
-    if(it!=end())
-        return *it;
-    throw KeyNotExists();
-
+    try{
+        return *Iterator(tree.find(key));
+    }
+    catch (typename AVLTree<K,int>::KeyNotExists&){
+        throw KeyNotExists();
+    }
 }
 
 
