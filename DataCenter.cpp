@@ -67,7 +67,7 @@ unsigned int DataCenter::get_windows() const{
 }
 
 unsigned int DataCenter::get_linux() const{
-    return servers.size-get_windows();
+    return servers.size() - get_windows();
 }
 
 unsigned int DataCenter::get_ID() const{
