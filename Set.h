@@ -94,7 +94,7 @@ typename Set<K>::Iterator Set<K>::end() const {
 
 template<class K>
 unsigned int Set<K>::size() {
-    return tree.get_size();
+    return tree.size();
 }
 
 
