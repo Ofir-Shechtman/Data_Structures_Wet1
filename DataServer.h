@@ -25,6 +25,7 @@ class DataServer{
     Map<DataCenterID, DataCenter> data_centers;
     Set<DataCenter*> data_center_by_linux;
     Set<DataCenter*> data_center_by_windows;
+
 public:
     DataServer();
     ~DataServer() = default;
@@ -33,6 +34,7 @@ public:
     ServerID RequestServer(DataCenterID dc_id, ServerID server_id, OS os);
     void FreeServer(DataCenterID dc_id, ServerID server_id);
     Array<DataCenterID> GetDataCentersByOS(OS os);
+    unsigned int get_num_of_servers(DataCenterID) const;
 };
 
 

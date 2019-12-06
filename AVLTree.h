@@ -81,6 +81,7 @@ public:
     Pair<K,T> operator*() const;   //TODO: remove after test
     const K& key() const;
     const T& data() const;
+    T& data();
     const Iterator& operator++();
     bool operator!=(const Iterator& it) const;
     class InvalidIterator : public exception{};
@@ -188,6 +189,12 @@ const T &AVLTree<K, T>::Iterator::data() const {
     return node->data;
 }
 
+template<class K, class T>
+T &AVLTree<K, T>::Iterator::data() {
+    return node->data;
+}
+
+
 template <class K, class T>
 typename AVLTree<K,T>::Iterator AVLTree<K,T>::insert(const K &key, const T &data) {
     if(root == nullptr){
@@ -225,7 +232,9 @@ typename AVLTree<K,T>::Node *AVLTree<K,T>::insert_req(const K &key, const T &dat
             insert_req(key, data, n->right, s);
         }
     }
-    throw KeyAlreadyExists();
+    else
+        throw KeyAlreadyExists();
+    return nullptr;
 }
 
 template <class K, class T>

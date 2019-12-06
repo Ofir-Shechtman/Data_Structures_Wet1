@@ -17,7 +17,6 @@ public:
     Array<T>& operator=(const Array&);
     T& operator[](unsigned int index);
     const T& operator[](unsigned int index) const;
-    const T& operator*() const;
 
 };
 
@@ -25,8 +24,8 @@ template<class T>
 Array<T>::Array(unsigned int size): array_size(size), data(new T[size]){}
 
 template<class T>
-Array<T>::Array(const Array<T>& array): array_size(array_size), data(new T[array_size]) {
-    for(int i=0; i < array_size; ++i){
+Array<T>::Array(const Array<T>& array): array_size(array.array_size), data(new T[array_size]) {
+    for(unsigned int i=0; i < array_size; ++i){
         data[i]= array[i];
     }
 }
@@ -58,15 +57,6 @@ T &Array<T>::operator[](unsigned int index) {
 template<class T>
 const T &Array<T>::operator[](unsigned int index) const {
     return data[index];
-}
-
-template<class T>
-const T &Array<T>::operator*() const {
-    T* array= new T[array_size];
-    for(int i=0; i < array_size; ++i){
-        array[i]= data[i];
-    }
-    return array;
 }
 
 template<class T>

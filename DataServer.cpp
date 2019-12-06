@@ -10,20 +10,20 @@ DataServer::DataServer() :
 void DataServer::AddDataCenter(DataCenterID dc_id, int numOfServers) {
     DataCenter dc=DataCenter(dc_id, numOfServers);
     auto it = data_centers.insert(dc_id, dc);
-    DataCenter p  = *it;
+    DataCenter& p  = *it;
     data_center_by_windows.insert(&p);
     data_center_by_linux.insert(&p);
 }
 
 void DataServer::RemoveDataCenter(DataCenterID dc_id) {
-    DataCenter dc = data_centers.at(dc_id);
+    DataCenter& dc = data_centers.at(dc_id);
     data_center_by_windows.erase(&dc);
     data_center_by_linux.erase(&dc);
     data_centers.erase(dc_id);
 }
 
 ServerID DataServer::RequestServer(DataCenterID dc_id, ServerID server_id, OS os) {
-    DataCenter dc = data_centers.at(dc_id);
+    DataCenter& dc = data_centers.at(dc_id);
     data_center_by_windows.erase(&dc);
     data_center_by_linux.erase(&dc);
     ServerID s = dc.AllocateServer(server_id, os);
@@ -33,7 +33,7 @@ ServerID DataServer::RequestServer(DataCenterID dc_id, ServerID server_id, OS os
 }
 
 void DataServer::FreeServer(DataCenterID dc_id, ServerID server_id) {
-    DataCenter dc = data_centers.at(dc_id);
+    DataCenter& dc = data_centers.at(dc_id);
     data_center_by_windows.erase(&dc);
     data_center_by_linux.erase(&dc);
     dc.ReturnServer(server_id);
@@ -50,6 +50,13 @@ Array<DataCenterID> DataServer::GetDataCentersByOS(OS os) {
         array[i++]=dc->get_ID();
     return array;
 }
+
+
+unsigned int DataServer::get_num_of_servers(DataCenterID dc_id) const {
+    const DataCenter& dc = data_centers.at(dc_id);
+    return dc.get_linux()+dc.get_windows();
+}
+
 
 template<class DC>
 bool CompareDataCenterByLinux<DC>::operator()(const DC& a, const DC& b) const {

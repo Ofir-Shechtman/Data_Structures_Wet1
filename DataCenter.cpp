@@ -13,7 +13,8 @@ DataCenter::Server::Server(ServerID id, List<ServerID>::Iterator it):
  */
 DataCenter::DataCenter(DataCenterID dc_id, unsigned int num_of_servers):
         dc_id(dc_id),
-        servers(Array<Server>(num_of_servers)), windows_counter(0){
+        servers(Array<Server>(num_of_servers)), windows_counter(0),
+        linux_queue(List<ServerID >()),windows_queue(List<ServerID >()){
     for(ServerID id=0; id<num_of_servers; ++id){
         auto server_it=linux_queue.push_back(id);
         servers[id]=Server(id, server_it);
@@ -36,7 +37,7 @@ ServerID DataCenter::AllocateServer(ServerID id, OS os) {
             if (queue->empty())
                 throw NoFreeServers();
         }
-        server=&servers[queue->front()];
+        server= &servers[queue->front()];
     }
     queue->erase(server->iterator);
     server->state=Occupied;

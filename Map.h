@@ -18,6 +18,7 @@ public:
     void clear();
     Iterator insert(const K& key, const T& data);
     const T& at(const K& key) const; //if key not found throw KeyNotExists
+    T& at(const K& key);
     //void erase(const Iterator&);
     class KeyNotExists : public AVLTree<K,T>::KeyNotExists{};
     class KeyAlreadyExists : public AVLTree<K,T>::KeyAlreadyExists{};
@@ -29,6 +30,7 @@ class Map<K, T>::Iterator{
 public:
     explicit Iterator(typename AVLTree<K, T>::Iterator iterator = AVLTree<K, T>::Iterator());
     const T& operator*() const;
+    T& operator*();
     Iterator& operator++();
     bool operator!=(const Iterator& it) const;
     class InvalidIterator : public exception{};
@@ -44,6 +46,11 @@ const T& Map<K, T>::Iterator::operator*() const {
 }
 
 template<class K, class T>
+T &Map<K, T>::Iterator::operator*() {
+    return iterator.data();
+}
+
+template<class K, class T>
 typename Map<K, T>::Iterator &Map<K, T>::Iterator::operator++() {
     return ++iterator;
 }
@@ -53,6 +60,7 @@ bool
 Map<K, T>::Iterator::operator!=(const Map<K, T>::Iterator &it) const {
     return Iterator(iterator)!=it;
 }
+
 
 template<class K, class T>
 bool Map<K, T>::empty() const{
@@ -90,6 +98,16 @@ const T& Map<K, T>::at(const K &key) const{
     }
 }
 
+template<class K, class T>
+T& Map<K, T>::at(const K &key) {
+    try{
+        return *Iterator(tree.find(key));
+    }
+    catch (typename AVLTree<K,int>::KeyNotExists&){
+        throw KeyNotExists();
+    }
+}
+
 
 template<class K, class T>
 void Map<K, T>::erase(const K &key) {
@@ -111,6 +129,7 @@ template<class K, class T>
 unsigned int Map<K, T>::size() {
     return tree.size();
 }
+
 
 
 #endif //MAP_H

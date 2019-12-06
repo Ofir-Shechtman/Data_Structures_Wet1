@@ -226,7 +226,7 @@ const T& List<T>::back() const{
 }
 
 template<class T>
-List<T>::List(const List& list) : head(nullptr), tail(nullptr), list_size(list.list_size){
+List<T>::List(const List& list) : head(nullptr), tail(nullptr), list_size(0){
     *this=list;
 }
 

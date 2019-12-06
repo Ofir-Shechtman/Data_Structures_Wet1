@@ -19,9 +19,9 @@ string print_queue(const List<ServerID>& list){
 }
 
 
-class TestDataServer : public DataCenter{
+class TestDataCenter : public DataCenter{
 public:
-    TestDataServer(DataCenterID dc_id, unsigned int num_of_servers):DataCenter(dc_id, num_of_servers){};
+    TestDataCenter(DataCenterID dc_id, unsigned int num_of_servers):DataCenter(dc_id, num_of_servers){};
     string print_servers() const;//{return print_array(servers);}
     string print_windows_queue() const{return print_queue(windows_queue);};
     string print_linux_queue() const{return print_queue(linux_queue);};
@@ -35,7 +35,7 @@ public:
     }
 };
 
-string TestDataServer::print_servers() const {
+string TestDataCenter::print_servers() const {
     string result= "Servers[";
     for(unsigned int i=0;i<servers.size(); ++i){
         const Server& s= servers[i];
@@ -57,13 +57,13 @@ string TestDataServer::print_servers() const {
 
 
 //template <class T>
-ostream& operator<<(ostream& os, const TestDataServer& data){
+ostream& operator<<(ostream& os, const TestDataCenter& data){
     return os << data.print() << endl;
 }
 
 
-void DataServer_Test(){
-    TestDataServer dc(123, 5);
+void DataCenter_Test(){
+    TestDataCenter dc(123, 5);
     cout<<dc<<endl;
     dc.AllocateServer(1, Windows);
     cout<<dc<<endl;
