@@ -63,6 +63,8 @@ void DataServer::FreeServer(DataCenterID dc_id, ServerID server_id) {
 
 ServerID* DataServer::GetDataCentersByOS(OS os, int* numOfServers) {
     auto& set = os==Linux ? data_center_by_linux : data_center_by_windows;
+    if(set.size()==0)
+        throw std::exception();
     *numOfServers = (int) set.size();
     auto array = new ServerID[*numOfServers];
     int i=0;

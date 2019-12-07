@@ -78,7 +78,7 @@ protected:   //TODO: remove after test
     void Father();
 public:
     friend AVLTree;
-    explicit Iterator(Node* root= nullptr);
+    Iterator(Node* root, Stack<Node*> stack);
     Pair<K,T> operator*() const;   //TODO: remove after test
     const K& key() const;
     const T& data() const;
@@ -108,21 +108,28 @@ typename AVLTree<K,T>::Node* AVLTree<K,T>::find_req(const K &key, AVLTree::Node 
 
 template <class K, class T>
 typename AVLTree<K,T>::Iterator AVLTree<K,T>::find(const K &key) const {
-    Node *n = find_req(key, root);
+    Stack<Node*> s;
+    Node *n = find_req(key, root, &s);
     if(!n){
         throw KeyNotExists();
     }
-    return Iterator(n);
+    return Iterator(n, s);
 }
 
 template<class K, class T>
 typename AVLTree<K,T>::Iterator AVLTree<K, T>::begin() const {
-    return AVLTree::Iterator(root);
+    Stack<Node *> s;
+    auto node = root;
+    while (node->left){
+        s.push(node);
+        node = node->left;
+    }
+    return AVLTree::Iterator(node, s);
 }
 
 template<class K, class T>
 typename AVLTree<K,T>::Iterator AVLTree<K, T>::end() const {
-    return AVLTree::Iterator(nullptr);
+    return AVLTree::Iterator(nullptr, Stack<Node*>());
 }
 
 template <class K, class T>
@@ -144,11 +151,9 @@ void AVLTree<K,T>::Iterator::Father() {
 }
 
 template <class K, class T>
-AVLTree<K,T>::Iterator::Iterator(Node* root):node(root), stack(Stack<Node*>()){
+AVLTree<K,T>::Iterator::Iterator(Node* node, Stack<Node*> s):node(node), stack(s){
     if(!node)
         return;
-    while(node->left)
-        Left();
 }
 
 template <class K, class T>
@@ -201,12 +206,12 @@ typename AVLTree<K,T>::Iterator AVLTree<K,T>::insert(const K &key, const T &data
     if(root == nullptr){
         root = new Node(key,data);
         tree_size++;
-        return Iterator(root);
+        return Iterator(root, Stack<Node*>());
     }
     Stack<Node*> s;
     AVLTree::Node *new_node = insert_req(key, data, root, &s);
     balance_tree(&s);
-    return Iterator(new_node);
+    return Iterator(new_node, s);
 }
 
 template <class K, class T>

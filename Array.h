@@ -1,6 +1,7 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
+#include <iostream>
 
 //#include "SparseMatrix.h"
 
@@ -17,6 +18,7 @@ public:
     Array<T>& operator=(const Array&);
     T& operator[](unsigned int index);
     const T& operator[](unsigned int index) const;
+    class InvalidIndex : public std::exception{};
 
 };
 
@@ -51,11 +53,15 @@ Array<T> &Array<T>::operator=(const Array& array) {
 
 template<class T>
 T &Array<T>::operator[](unsigned int index) {
+    if(index<0 || index>=array_size)
+        throw InvalidIndex();
     return data[index];
 }
 
 template<class T>
 const T &Array<T>::operator[](unsigned int index) const {
+    if(index<0 || index>=array_size)
+        throw InvalidIndex();
     return data[index];
 }
 

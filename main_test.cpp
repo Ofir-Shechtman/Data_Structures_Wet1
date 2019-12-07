@@ -6,6 +6,6 @@
 int main(){
     //List_Test();
     //AVLTree_Test();
-    DataServer_Test();
+    DataServer_Test_1();
     return 0;
 }
