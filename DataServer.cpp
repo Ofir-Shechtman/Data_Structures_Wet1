@@ -19,6 +19,7 @@ void DataServer::RemoveDataCenter(DataCenterID dc_id) {
     data_center_by_windows.erase(dc);
     data_center_by_linux.erase(dc);
     data_centers.erase(dc_id);
+    delete dc;
 }
 
 ServerID DataServer::RequestServer(DataCenterID dc_id, ServerID server_id, OS os) {
@@ -61,12 +62,12 @@ void DataServer::FreeServer(DataCenterID dc_id, ServerID server_id) {
 }
 
 ServerID* DataServer::GetDataCentersByOS(OS os, int* numOfServers) {
-    *numOfServers = (int) data_centers.size();
-    auto* array = new ServerID(*numOfServers);
-    int i=0;
     auto& set = os==Linux ? data_center_by_linux : data_center_by_windows;
+    *numOfServers = (int) set.size();
+    auto array = new ServerID[*numOfServers];
+    int i=0;
     for(auto &dc : set)
-        array[i++]=dc->get_ID();
+        array[i++] = dc->get_ID();
     return array;
 }
 
@@ -77,6 +78,8 @@ unsigned int DataServer::get_num_of_servers(DataCenterID dc_id) const {
 }
 
 DataServer::~DataServer() {
+    for(auto &i : data_centers)
+        delete i;
     delete cmp_linux;
     delete cmp_win;
 }

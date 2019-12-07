@@ -17,15 +17,16 @@ void DataServer_Test(){
     ds.AddDataCenter(456, 2);
     ds.RequestServer(456, 0, Windows);
     int numOfServers=5;
-    int* array= (int*) ds.GetDataCentersByOS(Windows, &numOfServers);
+    int* array= (int*)ds.GetDataCentersByOS(Windows, &numOfServers);
     for(int i=0; i<numOfServers;++i)
         cout << array[i] << endl;
-    delete array;
+    delete[] array;
+
     ds.AddDataCenter(789,10);
     array= (int*) ds.GetDataCentersByOS(Linux, &numOfServers);
     for(int i=0; i<numOfServers;++i)
         cout << array[i] << endl;
-    delete array;
+    delete[] array;
     ds.RemoveDataCenter(123);
     //ds.RequestServer(123, 3, Windows);
     //ds.AddDataCenter(123, -5);

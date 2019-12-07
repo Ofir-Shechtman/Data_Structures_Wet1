@@ -33,7 +33,7 @@ public:
     explicit AVLTree(Compare<K>* compare): root(nullptr), compare(compare), cmp(*compare), tree_size(0){}
     AVLTree(const AVLTree &tree);
     AVLTree<K, T>& operator=(const AVLTree & tree);
-    ~AVLTree()= default;
+    ~AVLTree();
     Iterator find(const K& key) const;
     Iterator insert(const K& key, const T& data=T());
     void erase(const K& key);
@@ -420,6 +420,11 @@ AVLTree<K, T> &AVLTree<K, T>::operator=(const AVLTree &tree) {
     for(auto i=tree.begin(); i!=tree.end(); ++i)
         insert(i.key(), i.data());
     return *this;
+}
+
+template<class K, class T>
+AVLTree<K, T>::~AVLTree() {
+    clear();
 }
 
 
