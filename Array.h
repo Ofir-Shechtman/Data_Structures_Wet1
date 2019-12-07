@@ -43,7 +43,7 @@ Array<T> &Array<T>::operator=(const Array& array) {
     delete data;
     array_size=array.size();
     data= new T[array_size];
-    for(int i=0; i<array_size; ++i){
+    for(unsigned int i=0; i<array_size; ++i){
         data[i]= array[i];
     }
     return *this;

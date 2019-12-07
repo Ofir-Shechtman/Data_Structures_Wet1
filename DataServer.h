@@ -33,7 +33,7 @@ public:
     void RemoveDataCenter(DataCenterID dc_id);
     ServerID RequestServer(DataCenterID dc_id, ServerID server_id, OS os);
     void FreeServer(DataCenterID dc_id, ServerID server_id);
-    Array<DataCenterID> GetDataCentersByOS(OS os);
+    ServerID* GetDataCentersByOS(OS os, int* numOfServers);
     unsigned int get_num_of_servers(DataCenterID) const;
 };
 

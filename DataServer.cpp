@@ -41,11 +41,11 @@ void DataServer::FreeServer(DataCenterID dc_id, ServerID server_id) {
     data_center_by_linux.insert(&dc);
 }
 
-Array<DataCenterID> DataServer::GetDataCentersByOS(OS os) {
-    auto& set = os==Linux ? data_center_by_linux : data_center_by_windows;
-    unsigned int size = data_centers.size();
-    Array<DataCenterID> array(size);
+ServerID* DataServer::GetDataCentersByOS(OS os, int* numOfServers) {
+    *numOfServers = data_centers.size();
+    auto* array = new ServerID(*numOfServers);
     int i=0;
+    auto& set = os==Linux ? data_center_by_linux : data_center_by_windows;
     for(auto &dc : set)
         array[i++]=dc->get_ID();
     return array;

@@ -13,10 +13,14 @@ void DataServer_Test(){
     ds.RequestServer(123, 0, Windows);
     ds.FreeServer(123, 1);
     ds.FreeServer(123,3);
-    ds.FreeServer(123, 3);
+    //ds.FreeServer(123, 3);
     ds.AddDataCenter(456, 2);
     ds.RequestServer(456, 0, Windows);
-    ds.GetDataCentersByOS(Windows);
+    int numOfServers=5;
+    int* array= (int*) ds.GetDataCentersByOS(Windows, &numOfServers);
+    delete array;
+    ds.AddDataCenter(789,10);
+    int* b= (int*) ds.GetDataCentersByOS(Linux, &numOfServers);
 
 }
 
