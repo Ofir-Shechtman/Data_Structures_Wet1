@@ -13,13 +13,29 @@ DataCenter::Server::Server(ServerID id, List<ServerID>::Iterator it):
  */
 DataCenter::DataCenter(DataCenterID dc_id, unsigned int num_of_servers):
         dc_id(dc_id),
-        servers(Array<Server>(num_of_servers)), windows_counter(0),
-        linux_queue(List<ServerID >()),windows_queue(List<ServerID >()){
+        servers(Array<Server>(num_of_servers)),
+        linux_queue(List<ServerID >()),
+        windows_queue(List<ServerID >()),
+        windows_counter(0){
     for(ServerID id=0; id<num_of_servers; ++id){
-        auto server_it=linux_queue.push_back(id);
+        auto server_it =linux_queue.push_back(id);
         servers[id]=Server(id, server_it);
     }
 }
+
+
+DataCenter::DataCenter(const DataCenter& dc):
+        dc_id(dc.dc_id),
+        servers(dc.servers),
+        linux_queue(dc.linux_queue),
+        windows_queue(dc.windows_queue),
+        windows_counter(dc.windows_counter){
+    for(auto i=linux_queue.begin(); i!=linux_queue.end(); ++i)
+        servers[*i].iterator= i;
+    for(auto i=windows_queue.begin(); i!=windows_queue.end(); ++i)
+        servers[*i].iterator= i;
+}
+
 
 /*!
  * Allocating server by request
@@ -30,8 +46,9 @@ DataCenter::DataCenter(DataCenterID dc_id, unsigned int num_of_servers):
  */
 ServerID DataCenter::AllocateServer(ServerID id, OS os) {
     Server* server = &servers[id];
-    auto* queue = os==Linux ? &linux_queue : &windows_queue;
+    auto* queue = server->os==Linux ? &linux_queue : &windows_queue;
     if(server->state==Occupied) {
+        queue = os==Linux ? &linux_queue : &windows_queue;
         if(queue->empty()) {
             queue = os == Linux ? &windows_queue : &linux_queue;
             if (queue->empty())
@@ -74,3 +91,4 @@ unsigned int DataCenter::get_linux() const{
 unsigned int DataCenter::get_ID() const{
     return dc_id;
 }
+

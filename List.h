@@ -38,6 +38,7 @@ struct List<T>::Node{
     Node* next;
     Node* previous;
     Node(T data, Node* next, Node* previous);
+    Node(const Node&)= default;
     ~Node()= default;
 };
 
@@ -47,6 +48,9 @@ class List<T>::Iterator{
 public:
     friend class List<T>;
     explicit Iterator(Node* node= nullptr);
+    //Iterator(const Iterator& it);
+    //~Iterator();
+    //Iterator& operator=(const Iterator&);
     const T& operator*() const;
     Iterator& operator++();
     Iterator& operator--();
@@ -264,6 +268,21 @@ template<class T>
 const T& List<T>::Iterator::operator*() const {
     return node->data;
 }
+/*
+template<class T>
+List<T>::Iterator::Iterator(const List<T>::Iterator &it) : node(it.node ? new Node(*it.node): nullptr){}
+
+template<class T>
+List<T>::Iterator::~Iterator() {
+    delete node;
+}
+
+template<class T>
+typename List<T>::Iterator &List<T>::Iterator::operator=(const List<T>::Iterator& it) {
+    delete node;
+    node= node ? new Node(*it.node) : nullptr;
+}
+*/
 
 /*!
  * increase the iterator to the next value
@@ -301,5 +320,6 @@ template<class T>
 bool List<T>::Iterator::operator!=(const List<T>::Iterator& it) const {
     return node!=it.node;
 }
+
 
 #endif //LIST_H

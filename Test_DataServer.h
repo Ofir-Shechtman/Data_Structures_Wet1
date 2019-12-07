@@ -11,6 +11,12 @@ void DataServer_Test(){
     ds.RequestServer(123, 3, Windows);
     ds.RequestServer(123, 3, Linux);
     ds.RequestServer(123, 0, Windows);
+    ds.FreeServer(123, 1);
+    ds.FreeServer(123,3);
+    ds.FreeServer(123, 3);
+    ds.AddDataCenter(456, 2);
+    ds.RequestServer(456, 0, Windows);
+    ds.GetDataCentersByOS(Windows);
 
 }
 

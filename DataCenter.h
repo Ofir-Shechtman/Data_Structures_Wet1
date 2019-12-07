@@ -20,11 +20,12 @@ protected://just for testing
     DataCenterID dc_id;
     struct Server;
     Array<Server> servers;
-    List<ServerID> windows_queue;
     List<ServerID> linux_queue;
+    List<ServerID> windows_queue;
     unsigned int windows_counter;
 public:
     DataCenter(DataCenterID dc_id, unsigned int num_of_servers);
+    DataCenter(const DataCenter&);
     ~DataCenter()= default;
     ServerID AllocateServer(ServerID id, OS os);
     void ReturnServer(ServerID);
