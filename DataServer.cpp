@@ -29,10 +29,15 @@ ServerID DataServer::RequestServer(DataCenterID dc_id, ServerID server_id, OS os
     try {
         s = dc->AllocateServer(server_id, os);
     }
-    catch (...){
+    catch (std::exception()){
         data_center_by_windows.insert(dc);
         data_center_by_linux.insert(dc);
         throw std::exception();
+    }
+    catch (std::bad_alloc&){
+        data_center_by_windows.insert(dc);
+        data_center_by_linux.insert(dc);
+        throw std::bad_alloc();
     }
     data_center_by_windows.insert(dc);
     data_center_by_linux.insert(dc);

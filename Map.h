@@ -22,7 +22,7 @@ public:
     void clear();
     Iterator insert(const K& key, const T& data);
     const T& at(const K& key) const; //if key not found throw KeyNotExists
-    T& at(const K& key);
+    //T& at(const K& key);
     //void erase(const Iterator&);
     class KeyNotExists : public AVLTree<K,T>::KeyNotExists{};
     class KeyAlreadyExists : public AVLTree<K,T>::KeyAlreadyExists{};
@@ -101,7 +101,7 @@ const T& Map<K, T>::at(const K &key) const{
         throw KeyNotExists();
     }
 }
-
+/*
 template<class K, class T>
 T& Map<K, T>::at(const K &key) {
     try{
@@ -110,7 +110,7 @@ T& Map<K, T>::at(const K &key) {
     catch (typename AVLTree<K,int>::KeyNotExists&){
         throw KeyNotExists();
     }
-}
+}*/
 
 
 template<class K, class T>
