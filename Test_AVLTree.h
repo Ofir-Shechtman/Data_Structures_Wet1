@@ -9,7 +9,9 @@
 using namespace std;
 
 class AVLTree_test : public AVLTree<int, int>{
+    Compare<int>* cmp;
 public:
+    AVLTree_test(): cmp(new Compare<int>()), AVLTree<int, int>(cmp){}
     friend string print(AVLTree_test::Node* tree);
     Node* get_root() const{
         return  root;

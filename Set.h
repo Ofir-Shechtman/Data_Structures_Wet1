@@ -10,7 +10,7 @@ public:
     class Iterator;
     Iterator begin() const;
     Iterator end() const;
-    explicit Set(const Compare<K>& cmp=Compare<K>());
+    explicit Set(Compare<K>* cmp);
     bool empty() const;
     unsigned int size();
     void clear();
@@ -53,7 +53,7 @@ Set<K>::Iterator::Iterator(typename AVLTree<K, int>::Iterator iterator):
     iterator(iterator){}
 
 template<class K>
-Set<K>::Set(const Compare<K> &cmp) : tree(AVLTree<K, int>(cmp)){}
+Set<K>::Set(Compare<K>* cmp) : tree(AVLTree<K, int>(cmp)){}
 
 template<class K>
 bool Set<K>::empty() const{

@@ -19,7 +19,8 @@ class AVLTree{
 protected:    //TODO: remove after test
     struct Node;
     Node *root;
-    Compare<K> cmp;
+    Compare<K>* compare;
+    Compare<K>& cmp;
     unsigned int tree_size;
     Node *find_req(const K &key, Node *n, Stack<Node*>* s= nullptr) const;
     Node *insert_req(const K &key, const T &data, Node* n, Stack<Node*>* s);
@@ -29,10 +30,10 @@ public:
     class Iterator;
     Iterator begin() const;
     Iterator end() const;
-    explicit AVLTree(Compare<K> cmp=Compare<K>()): root(nullptr), cmp(cmp), tree_size(0){}
+    explicit AVLTree(Compare<K>* compare): root(nullptr), compare(compare), cmp(*compare), tree_size(0){}
     AVLTree(const AVLTree &tree);
     AVLTree<K, T>& operator=(const AVLTree & tree);
-    ~AVLTree() = default;
+    ~AVLTree()= default;
     Iterator find(const K& key) const;
     Iterator insert(const K& key, const T& data=T());
     void erase(const K& key);
@@ -82,7 +83,7 @@ public:
     const K& key() const;
     const T& data() const;
     T& data();
-    const Iterator& operator++();
+    Iterator operator++();
     bool operator!=(const Iterator& it) const;
     class InvalidIterator : public exception{};
 };
@@ -151,7 +152,7 @@ AVLTree<K,T>::Iterator::Iterator(Node* root):node(root), stack(Stack<Node*>()){
 }
 
 template <class K, class T>
-const typename AVLTree<K,T>::Iterator &AVLTree<K,T>::Iterator::operator++(){
+typename AVLTree<K,T>::Iterator AVLTree<K,T>::Iterator::operator++(){
     if(node== nullptr)
         throw InvalidIterator();
     if(node->right){
@@ -219,7 +220,7 @@ typename AVLTree<K,T>::Node *AVLTree<K,T>::insert_req(const K &key, const T &dat
             return n->left;
         }
         else{
-            insert_req(key, data, n->left, s);
+            return insert_req(key, data, n->left, s);
         }
     }
     else if(cmp(n->key, key)){
@@ -229,12 +230,11 @@ typename AVLTree<K,T>::Node *AVLTree<K,T>::insert_req(const K &key, const T &dat
             return n->right;
         }
         else {
-            insert_req(key, data, n->right, s);
+            return insert_req(key, data, n->right, s);
         }
     }
-    else
-        throw KeyAlreadyExists();
-    return nullptr;
+    throw KeyAlreadyExists();
+    //return nullptr;
 }
 
 template <class K, class T>
@@ -407,18 +407,21 @@ void AVLTree<K, T>::clear() {
 }
 
 template<class K, class T>
-AVLTree<K, T>::AVLTree(const AVLTree &tree) :cmp(tree.cmp), tree_size(0) {
+AVLTree<K, T>::AVLTree(const AVLTree &tree) :compare(tree.compare), cmp(*compare), tree_size(0) {
     *this=tree;
 
 }
 
 template<class K, class T>
 AVLTree<K, T> &AVLTree<K, T>::operator=(const AVLTree &tree) {
+    compare=compare;
+    cmp=cmp;
     clear();
     for(auto i=tree.begin(); i!=tree.end(); ++i)
         insert(i.key(), i.data());
     return *this;
 }
+
 
 template<class K, class T>
 void AVLTree<K, T>::balance_tree(Stack<Node*>* s) {

@@ -22,13 +22,17 @@ public:
 
 
 class DataServer{
-    Map<DataCenterID, DataCenter> data_centers;
+    Map<DataCenterID, DataCenter*> data_centers;
+    CompareDataCenterByLinux<DataCenter*>* cmp_linux;
+    CompareDataCenterByWindows<DataCenter*>* cmp_win;
     Set<DataCenter*> data_center_by_linux;
     Set<DataCenter*> data_center_by_windows;
 
 public:
     DataServer();
-    ~DataServer() = default;
+    ~DataServer();
+    DataServer(const DataServer&)=delete;
+    DataServer& operator=(const DataServer&)=delete;
     void AddDataCenter(DataCenterID dc_id, int numOfServers);
     void RemoveDataCenter(DataCenterID dc_id);
     ServerID RequestServer(DataCenterID dc_id, ServerID server_id, OS os);

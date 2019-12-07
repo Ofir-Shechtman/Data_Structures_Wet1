@@ -5,12 +5,16 @@
 
 template <class K, class T>
 class Map {
+    Compare<K>* compare;
     AVLTree<K,T> tree;
 public:
     class Iterator;
     Iterator begin() const;
     Iterator end() const;
-    Map()= default;
+    Map();
+    ~Map();
+    Map(const Map&);
+    Map& operator=(const Map&);
     bool empty() const;
     Iterator find(const K& key);
     void erase(const K& key);
@@ -31,7 +35,7 @@ public:
     explicit Iterator(typename AVLTree<K, T>::Iterator iterator = AVLTree<K, T>::Iterator());
     const T& operator*() const;
     T& operator*();
-    Iterator& operator++();
+    Iterator operator++();
     bool operator!=(const Iterator& it) const;
     class InvalidIterator : public exception{};
 };
@@ -51,14 +55,14 @@ T &Map<K, T>::Iterator::operator*() {
 }
 
 template<class K, class T>
-typename Map<K, T>::Iterator &Map<K, T>::Iterator::operator++() {
-    return ++iterator;
+typename Map<K, T>::Iterator Map<K, T>::Iterator::operator++() {
+    return Iterator(++iterator);
 }
 
 template<class K, class T>
 bool
 Map<K, T>::Iterator::operator!=(const Map<K, T>::Iterator &it) const {
-    return Iterator(iterator)!=it;
+    return iterator!=it.iterator;
 }
 
 
@@ -128,6 +132,25 @@ typename Map<K, T>::Iterator Map<K, T>::end() const {
 template<class K, class T>
 unsigned int Map<K, T>::size() {
     return tree.size();
+}
+
+template<class K, class T>
+Map<K, T>::Map() : compare(new Compare<K>()), tree(compare){
+
+}
+
+
+template<class K, class T>
+Map<K, T>::Map(const Map & map): compare(new Compare<K>()), tree(map.tree) {}
+
+template<class K, class T>
+Map<K, T>::~Map() {
+    delete compare;
+}
+
+template<class K, class T>
+Map<K, T> &Map<K, T>::operator=(const Map &map) {
+    tree=map.tree;
 }
 
 
