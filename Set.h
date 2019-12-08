@@ -20,9 +20,6 @@ public:
     //void erase(const Iterator&);
     class KeyNotExists : public AVLTree<K,int>::KeyNotExists{};
     class KeyAlreadyExists : public AVLTree<K,int>::KeyAlreadyExists{};
-    void Test_Balance() { //TODO: remove after test
-        tree.Test_Balance();
-    }
 };
 
 template <class K>

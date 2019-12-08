@@ -25,9 +25,7 @@ void DataServer::RemoveDataCenter(DataCenterID dc_id) {
 ServerID DataServer::RequestServer(DataCenterID dc_id, ServerID server_id, OS os) {
     DataCenter* dc = data_centers.at(dc_id);
     data_center_by_windows.erase(dc);
-    //cout << "Linux, Before1" << print_set(data_center_by_linux) <<endl; TODO: delete
     data_center_by_linux.erase(dc);
-    //cout << "Linux, After1" << print_set(data_center_by_linux) <<endl;
     ServerID s;
     try {
         s = dc->AllocateServer(server_id, os);

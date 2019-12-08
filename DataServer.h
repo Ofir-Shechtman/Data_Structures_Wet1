@@ -22,14 +22,12 @@ public:
 
 
 class DataServer{
-public://TODO: remove after test
     Map<DataCenterID, DataCenter*> data_centers;
     CompareDataCenterByLinux<DataCenter*>* cmp_linux;
     CompareDataCenterByWindows<DataCenter*>* cmp_win;
     Set<DataCenter*> data_center_by_linux;
     Set<DataCenter*> data_center_by_windows;
-
-//public: TODO: remove after test
+public:
     DataServer();
     ~DataServer();
     DataServer(const DataServer&)=delete;

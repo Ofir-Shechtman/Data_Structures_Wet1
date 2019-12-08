@@ -2,7 +2,6 @@
 #define AVLTREE_H
 #include <iostream>
 #include "Stack.h"
-#include "Pair.h"
 
 using namespace std;
 
@@ -16,7 +15,6 @@ public:
 
 template <class K, class T>
 class AVLTree{
-protected:    //TODO: remove after test
     struct Node;
     Node *root;
     Compare<K>* compare;
@@ -42,18 +40,7 @@ public:
     void clear();
     class KeyNotExists : public exception{};
     class KeyAlreadyExists : public exception{};
-    void Test_Balance(){ //TODO: remove after test
-        for(auto i=begin(); i!=end();++i){
-            auto n=i.node;
-            if(!n->left && !n->right && n->height)
-                throw 1;
-            int l = n->left ? n->left->height : -1;
-            int r = n->right ? n->right->height : -1;
-            if(n->height != max(l, r)+1)
-                throw 2;
-        }
-    }
-};
+ };
 
 template <class K, class T>
 struct AVLTree<K,T>::Node{
@@ -81,7 +68,6 @@ struct AVLTree<K,T>::Node{
 
 template <class K, class T>
 class AVLTree<K,T>::Iterator{
-protected:   //TODO: remove after test
     Node* node;
     Stack<Node*> stack;
     void Left();
@@ -90,7 +76,6 @@ protected:   //TODO: remove after test
 public:
     friend AVLTree;
     Iterator(Node* node, Stack<Node*> stack);
-    Pair<K,T> operator*() const;   //TODO: remove after test
     const K& key() const;
     const T& data() const;
     T& data();
@@ -453,12 +438,6 @@ void AVLTree<K, T>::balance_tree(Stack<Node*>* s) {
         s->pop();
         n->balance();
     }
-}
-
-
-template<class K, class T>
-Pair<K, T> AVLTree<K, T>::Iterator::operator*() const {
-    return Pair<K,T>(node->key, node->data);
 }
 
 

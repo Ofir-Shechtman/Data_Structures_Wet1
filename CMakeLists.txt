@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_executable(Data_Structures_Wet1
                 main_test.cpp
-                library.cpp
+        library1.cpp
                 DataCenter.cpp
                 DataServer.cpp
         )
