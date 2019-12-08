@@ -4,9 +4,37 @@
 #include "DataServer.h"
 using namespace std;
 
+class TestDataServer : public DataServer{
+public:
+    bool linuxContains(DataCenterID dc_id){
+        DataCenter* dc = data_centers.at(dc_id);
+        return (data_center_by_linux.find(dc)!=data_center_by_linux.end());
+    }
+    bool windowsContains(DataCenterID dc_id){
+        DataCenter* dc = data_centers.at(dc_id);
+        return (data_center_by_windows.find(dc)!=data_center_by_linux.end());
+    }
+    string print_set(const Set<DataCenter*>& set){
+        string result= "{";
+        for(auto i : set){
+            result+= to_string(i->get_linux());
+            result+= ", ";
+        }
+        if(!set.empty()) {
+            result.pop_back();
+            result.pop_back();
+        }
+        result+= "}";
+        return result;
+    }
+    void Test_linux_Balance(){
+        data_center_by_linux.Test_Balance();
+    }
+};
+
 
 void DataServer_Test(){
-    DataServer ds;
+    TestDataServer ds;
     ds.AddDataCenter(123,5);
     ds.RequestServer(123, 3, Windows);
     ds.RequestServer(123, 3, Linux);
@@ -30,14 +58,18 @@ void DataServer_Test(){
     ds.RemoveDataCenter(123);
     //ds.RequestServer(123, 3, Windows);
     //ds.AddDataCenter(123, -5);
+
 }
 
 void DataServer_Test_1(){
-    DataServer ds;
+    TestDataServer ds;
+    ds.Test_linux_Balance();
     ds.AddDataCenter(3, 51);
+    ds.Test_linux_Balance();
     ds.AddDataCenter(5, 299);
     ds.AddDataCenter(7, 20);
     ds.RemoveDataCenter(7);
+    ds.Test_linux_Balance();
     ds.AddDataCenter(9, 93);
     ds.RemoveDataCenter(5);
     ds.AddDataCenter(1, 277);
@@ -45,6 +77,7 @@ void DataServer_Test_1(){
     ds.AddDataCenter(23, 294);
     ds.AddDataCenter(4, 183);
     ds.RemoveDataCenter(4);
+    ds.Test_linux_Balance();
     ds.AddDataCenter(15, 142);
     ds.AddDataCenter(17, 129);
     ds.AddDataCenter(28, 164);
@@ -60,15 +93,22 @@ void DataServer_Test_1(){
     ds.RemoveDataCenter(26);
     ds.AddDataCenter(24, 194);
     ds.RemoveDataCenter(15);
+    //cout<<ds.print_set(ds.data_center_by_linux)<<endl;
+    //cout<<ds.print_set(ds.data_center_by_windows)<<endl;
     ds.RequestServer(23, 69, Linux);
+    //cout<<ds.print_set(ds.data_center_by_linux)<<endl;
+    //cout<<ds.print_set(ds.data_center_by_windows)<<endl;
     ds.AddDataCenter(26, 185);
-    //ds.RequestServer(1, 210, Windows);
+    ds.RequestServer(1, 210, Windows);
     ds.RemoveDataCenter(1);
-    //ds.AddDataCenter(15, 121);
+    ds.AddDataCenter(15, 121);
     ds.RemoveDataCenter(11);
     ds.AddDataCenter(11, 4);
     ds.AddDataCenter(19, 48);
     ds.AddDataCenter(22, 313);
+    ds.Test_linux_Balance();
+    //cout<<ds.linuxContains(24);
+    //cout<<ds.windowsContains(24)<<endl;
     ds.RemoveDataCenter(24);
     ds.AddDataCenter(25, 126);
     ds.RemoveDataCenter(19);

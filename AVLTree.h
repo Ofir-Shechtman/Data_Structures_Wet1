@@ -42,6 +42,17 @@ public:
     void clear();
     class KeyNotExists : public exception{};
     class KeyAlreadyExists : public exception{};
+    void Test_Balance(){ //TODO: remove after test
+        for(auto i=begin(); i!=end();++i){
+            auto n=i.node;
+            if(!n->left && !n->right && n->height)
+                throw 1;
+            int l = n->left ? n->left->height : -1;
+            int r = n->right ? n->right->height : -1;
+            if(n->height != max(l, r)+1)
+                throw 2;
+        }
+    }
 };
 
 template <class K, class T>
@@ -78,7 +89,7 @@ protected:   //TODO: remove after test
     void Father();
 public:
     friend AVLTree;
-    Iterator(Node* root, Stack<Node*> stack);
+    Iterator(Node* node, Stack<Node*> stack);
     Pair<K,T> operator*() const;   //TODO: remove after test
     const K& key() const;
     const T& data() const;
@@ -120,9 +131,11 @@ template<class K, class T>
 typename AVLTree<K,T>::Iterator AVLTree<K, T>::begin() const {
     Stack<Node *> s;
     auto node = root;
-    while (node->left){
-        s.push(node);
-        node = node->left;
+    if(node){
+        while (node->left){
+            s.push(node);
+            node = node->left;
+        }
     }
     return AVLTree::Iterator(node, s);
 }
@@ -151,7 +164,7 @@ void AVLTree<K,T>::Iterator::Father() {
 }
 
 template <class K, class T>
-AVLTree<K,T>::Iterator::Iterator(Node* node, Stack<Node*> s):node(node), stack(s){
+AVLTree<K,T>::Iterator::Iterator(Node* node, Stack<Node*> stack):node(node), stack(stack){
     if(!node)
         return;
 }
@@ -319,8 +332,8 @@ void AVLTree<K,T>::Node::RL() {
 
 template<class K, class T>
 void AVLTree<K, T>::Node::update_height() {
-    unsigned int l = left ? left->height : 0;
-    unsigned int r = right ? right->height : 0;
+    int l = left ? left->height : -1;
+    int r = right ? right->height : -1;
     height=max(l, r)+1;
 }
 

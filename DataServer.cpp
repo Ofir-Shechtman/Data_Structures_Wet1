@@ -25,20 +25,22 @@ void DataServer::RemoveDataCenter(DataCenterID dc_id) {
 ServerID DataServer::RequestServer(DataCenterID dc_id, ServerID server_id, OS os) {
     DataCenter* dc = data_centers.at(dc_id);
     data_center_by_windows.erase(dc);
+    //cout << "Linux, Before1" << print_set(data_center_by_linux) <<endl; TODO: delete
     data_center_by_linux.erase(dc);
+    //cout << "Linux, After1" << print_set(data_center_by_linux) <<endl;
     ServerID s;
     try {
         s = dc->AllocateServer(server_id, os);
     }
-    catch (std::exception()){
+    catch (std::bad_alloc& e){
         data_center_by_windows.insert(dc);
         data_center_by_linux.insert(dc);
-        throw std::exception();
+        throw e;
     }
-    catch (std::bad_alloc&){
+    catch (std::exception& e){
         data_center_by_windows.insert(dc);
         data_center_by_linux.insert(dc);
-        throw std::bad_alloc();
+        throw e;
     }
     data_center_by_windows.insert(dc);
     data_center_by_linux.insert(dc);
@@ -52,10 +54,15 @@ void DataServer::FreeServer(DataCenterID dc_id, ServerID server_id) {
     try {
         dc->ReturnServer(server_id);
     }
-    catch (...) {
+    catch (std::bad_alloc& e){
         data_center_by_windows.insert(dc);
         data_center_by_linux.insert(dc);
-        throw std::exception();
+        throw e;
+    }
+    catch (std::exception& e){
+        data_center_by_windows.insert(dc);
+        data_center_by_linux.insert(dc);
+        throw e;
     }
     data_center_by_windows.insert(dc);
     data_center_by_linux.insert(dc);
@@ -99,3 +106,4 @@ bool CompareDataCenterByWindows<DC>::operator()(const DC& a, const DC& b) const 
         return a->get_ID()<b->get_ID();
     return a->get_windows() > b->get_windows();
 }
+

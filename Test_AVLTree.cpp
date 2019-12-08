@@ -8,10 +8,20 @@
 #include <vector>
 using namespace std;
 
-class AVLTree_test : public AVLTree<int, int>{
-    Compare<int>* cmp;
+
+template<class K>
+class CompareReverse : public Compare<K>{
 public:
-    AVLTree_test(): cmp(new Compare<int>()), AVLTree<int, int>(cmp){}
+    bool operator()(const K& a, const K& b) const{
+        return a < b;
+    }
+};
+
+
+class AVLTree_test : public AVLTree<int, int>{
+    //Compare<int>* cmp;
+public:
+    AVLTree_test(): AVLTree<int, int>(new CompareReverse<int>()){}
     friend string print(AVLTree_test::Node* tree);
     Node* get_root() const{
         return  root;
@@ -638,6 +648,63 @@ void AVLTree_Test(){
     test(t.is_sorted(), "True", __LINE__);
     t.insert(41);
     test(t.is_sorted(), "True", __LINE__);
+    total();
+}
+
+void AVLTree_Test_sp(){
+    AVLTree_test t;
+    t.insert(51);
+    t.insert(299);
+    t.insert(20);
+    t.erase(20);
+    t.insert(93);
+    t.erase(299);
+    t.insert(277);
+    t.erase(277);
+    t.insert(276);
+    t.insert(294);
+    t.insert(183);
+    t.erase(183);
+    t.insert(142);
+    t.insert(129);
+    t.insert(164);
+    t.erase(164);
+    t.insert(164);
+    t.insert(73);
+    t.insert(131);
+    t.erase(142);
+    t.insert(142);
+    t.insert(59);
+    t.erase(73);
+    t.erase(93);
+    t.insert(290);
+    t.erase(290);
+    t.insert(290);
+    t.erase(131);
+    t.insert(194);
+    t.erase(142);
+    /*
+    t.insert(5);
+    test(t, "{(5,,)}");
+    t.insert(1);
+    test(t, "{(5,(1,,),)}");
+    t.insert(6);
+    test(t, "{(5,(1,,),(6,,))}");
+    t.insert(3);
+    test(t, "{(5,(1,,(3,,)),(6,,))}");
+    t.insert(8);
+    test(t, "{(5,(1,,(3,,)),(6,,(8,,)))}");
+    t.insert(2);
+    test(t, "{(5,(1,,(3,(2,,),)),(6,,(8,,)))}", __LINE__);
+    t.insert(4);
+    test(t, "{(5,(1,,(3,(2,,),(4,,))),(6,,(8,,)))}", __LINE__);
+    t.insert(4);
+    test(t, "{(5,(1,,(3,(2,,),(4,,))),(6,,(8,(7,,),)))}", __LINE__);
+     */
+    test(t, "{(5,(1,,(3,(2,,),(4,,))),(6,,(8,(7,,),)))}", __LINE__);
+    test(t.is_sorted(), "True", __LINE__);
+    test(t.size() == 8, "True", __LINE__);
+    //t.erase(80);
     total();
 }
 
